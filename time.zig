@@ -215,6 +215,7 @@ pub const DateTime = struct {
                 ',',
                 ' ',
                 ':',
+                '-',
                 => {
                     try writer.writeAll(&.{c});
                     s = i + 1;
