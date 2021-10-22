@@ -196,7 +196,7 @@ pub const DateTime = struct {
                     .HH => try writer.print("{:0>2}", .{self.hours}),
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
-                    .MM => try writer.print("{:0>2}", .{self.months}),
+                    .MM => try writer.print("{:0>2}", .{self.months + 1}),
                     .z => try writer.writeAll(@tagName(self.timezone)),
 
                     .MMM => {
