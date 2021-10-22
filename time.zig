@@ -221,7 +221,6 @@ pub const DateTime = struct {
                     },
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
-
                 }
                 next = null;
                 s = i;
