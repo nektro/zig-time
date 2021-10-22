@@ -19,6 +19,10 @@ pub const DateTime = struct {
         return unix_epoch.addMs(unix);
     }
 
+    pub fn initUnix(unix: u64) Self {
+        return unix_epoch.addSecs(unix);
+    }
+
     /// Caller asserts that this is > epoch
     pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16) Self {
         return unix_epoch
