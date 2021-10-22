@@ -80,7 +80,7 @@ pub const DateTime = struct {
         var input = count;
 
         while (true) {
-            const year_len = self.daysThisYear();
+            const year_len = result.daysThisYear();
             if (input >= year_len) {
                 result.years += 1;
                 input -= year_len;
@@ -89,7 +89,7 @@ pub const DateTime = struct {
             break;
         }
         while (true) {
-            const month_len = self.daysThisMonth();
+            const month_len = result.daysThisMonth();
             if (input >= month_len) {
                 result.months += 1;
                 input -= month_len;
@@ -103,7 +103,7 @@ pub const DateTime = struct {
             break;
         }
         {
-            const month_len = self.daysThisMonth();
+            const month_len = result.daysThisMonth();
             if (result.days + input > month_len) {
                 const left = month_len - result.days;
                 input -= left;
