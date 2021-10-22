@@ -46,6 +46,18 @@ pub const DateTime = struct {
         .weekday = .Thu,
     };
 
+    pub fn eql(self: Self, other: Self) bool {
+        return self.ms == other.ms and
+            self.seconds == other.seconds and
+            self.minutes == other.minutes and
+            self.hours == other.hours and
+            self.days == other.days and
+            self.months == other.months and
+            self.years == other.years and
+            self.timezone == other.timezone and
+            self.weekday == other.weekday;
+    }
+
     pub fn addMs(self: Self, count: u64) Self {
         if (count == 0) return self;
         var result = self;
