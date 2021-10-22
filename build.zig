@@ -23,4 +23,11 @@ pub fn build(b: *std.build.Builder) void {
         run_step.dependOn(&run_cmd.step);
     }
 
+    {
+        const t = b.addTest("main.zig");
+        deps.addAllTo(t);
+
+        const t_step = b.step("test", "");
+        t_step.dependOn(&t.step);
+    }
 }
