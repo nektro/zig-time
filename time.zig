@@ -192,7 +192,7 @@ pub const DateTime = struct {
                 switch (tag) {
                     .ddd => try writer.writeAll(@tagName(self.weekday)),
                     .DD => try writer.print("{:0>2}", .{self.days + 1}),
-                    .YYYY => try writer.print("{:0>4}", .{self.years}),
+                    .YYY => try writer.print("{:0>4}", .{self.years}),
                     .HH => try writer.print("{:0>2}", .{self.hours}),
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
@@ -206,8 +206,6 @@ pub const DateTime = struct {
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
 
-                    // stubs to make the parser work
-                    .YYY => @compileError(comptime std.fmt.comptimePrint("'{s}' is not a valid format sequence", .{@tagName(tag)})),
                 }
                 next = null;
                 s = i;
@@ -264,11 +262,10 @@ pub const DateTime = struct {
         W, // 1 2 ... 52 53 (ISO)
         Wo, // 1st 2nd ... 52nd 53rd
         WW, // 01 02 ... 52 53
-        YY, // 70 71 ... 29 30
-        YYY, // stub
-        YYYY, // 1970 1971 ... 2029 2030
-        YYYYYY, // -001970 -001971 ... +001907 +001971
         Y, // 1970 1971 ... 9999 +10000 +10001
+        YY, // 70 71 ... 29 30
+        YYY, // 1970 1971 ... 2029 2030
+        YYYY, // -001970 -001971 ... +001907 +001971
         y, // 1 2 ... 2020 ... (era)
         N, // BC AD
         NN, // Before Christ ... Anno Domini
