@@ -212,6 +212,7 @@ pub const DateTime = struct {
                     .HH => try writer.print("{:0>2}", .{self.hours}),
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
+                    .SSS => try writer.print("{:0>3}", .{self.ms}),
                     .MM => try writer.print("{:0>2}", .{self.months + 1}),
                     .z => try writer.writeAll(@tagName(self.timezone)),
 
@@ -231,6 +232,7 @@ pub const DateTime = struct {
                 ' ',
                 ':',
                 '-',
+                '.',
                 => {
                     try writer.writeAll(&.{c});
                     s = i + 1;
