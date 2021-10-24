@@ -49,3 +49,5 @@ test { try assertOk(1144509852789, "Y",    "12006"); }
 test { try assertOk(1144509852789, "YY",   "06"); }
 test { try assertOk(1144509852789, "YYY",  "2006"); }
 test { try assertOk(1144509852789, "YYYY",  "2006"); }
+test { try assertOk(1144509852789, "N",    "AD"); }
+test { try assertOk(1144509852789, "NN",   "Anno Domini"); }
