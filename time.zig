@@ -17,17 +17,17 @@ pub const DateTime = struct {
     const Self = @This();
 
     pub fn initUnixMs(unix: u64) Self {
-        return unix_epoch.addMs(unix);
+        return epoch_unix.addMs(unix);
     }
 
     pub fn initUnix(unix: u64) Self {
-        return unix_epoch.addSecs(unix);
+        return epoch_unix.addSecs(unix);
     }
 
     /// Caller asserts that this is > epoch
     pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16) Self {
-        return unix_epoch
-            .addYears(year - unix_epoch.years)
+        return epoch_unix
+            .addYears(year - epoch_unix.years)
             .addMonths(month)
             .addDays(day)
             .addHours(hr)
@@ -39,7 +39,7 @@ pub const DateTime = struct {
         return initUnixMs(@intCast(u64, std.time.milliTimestamp()));
     }
 
-    pub const unix_epoch = Self{
+    pub const epoch_unix = Self{
         .ms = 0,
         .seconds = 0,
         .minutes = 0,
@@ -225,7 +225,7 @@ pub const DateTime = struct {
                 switch (tag) {
                     .ddd => try writer.writeAll(@tagName(self.weekday)),
                     .DD => try writer.print("{:0>2}", .{self.days + 1}),
-                    .YYY => try writer.print("{:0>4}", .{self.years}),
+                    .YYYY => try writer.print("{:0>4}", .{self.years}),
                     .HH => try writer.print("{:0>2}", .{self.hours}),
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
@@ -313,11 +313,10 @@ pub const DateTime = struct {
         W, // 1 2 ... 52 53 (ISO)
         Wo, // 1st 2nd ... 52nd 53rd
         WW, // 01 02 ... 52 53
-        Y, // 1970 1971 ... 9999 +10000 +10001
+        Y, // 11970 11971 ... 19999 20000 20001 (Holocene calendar)
         YY, // 70 71 ... 29 30
-        YYY, // 1970 1971 ... 2029 2030
-        YYYY, // -001970 -001971 ... +001907 +001971
-        y, // 1 2 ... 2020 ... (era)
+        YYY, // 1 2 ... 1970 1971 ... 2029 2030
+        YYYY, // 0001 0002 ... 1970 1971 ... 2029 2030
         N, // BC AD
         NN, // Before Christ ... Anno Domini
         A, // AM PM
