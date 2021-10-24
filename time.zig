@@ -12,6 +12,7 @@ pub const DateTime = struct {
     years: u16,
     timezone: TimeZone,
     weekday: WeekDay,
+    era: Era,
 
     const Self = @This();
 
@@ -48,6 +49,7 @@ pub const DateTime = struct {
         .years = 1970,
         .timezone = .UTC,
         .weekday = .Thu,
+        .era = .AD,
     };
 
     pub fn eql(self: Self, other: Self) bool {
@@ -376,6 +378,11 @@ pub const WeekDay = enum {
             .Sat => .Sun,
         };
     }
+};
+
+pub const Era = enum {
+    // BC,
+    AD,
 };
 
 fn printOrdinal(writer: anytype, num: u16) !void {
