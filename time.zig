@@ -236,6 +236,9 @@ pub const DateTime = struct {
                     .MMMM => try printLongName(writer, self.months, &[_]string{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }),
                     .Q => try writer.print("{}", .{self.months / 3 + 1}),
                     .Qo => try printOrdinal(writer, self.months / 3 + 1),
+                    .D => try writer.print("{}", .{self.days + 1}),
+                    .Do => try printOrdinal(writer, self.days + 1),
+                    .DDD => try writer.print("{}", .{self.dayOfThisYear() + 1}),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }

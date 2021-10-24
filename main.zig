@@ -30,3 +30,6 @@ test { try assertOk(1144509852789, "MMM",  "Apr"); }
 test { try assertOk(1144509852789, "MMMM", "April"); }
 test { try assertOk(1144509852789, "Q",    "2"); }
 test { try assertOk(1144509852789, "Qo",   "2nd"); }
+test { try assertOk(1144509852789, "D",    "8"); }
+test { try assertOk(1144509852789, "Do",   "8th"); }
+test { try assertOk(1144509852789, "DD",   "08"); }
