@@ -186,6 +186,15 @@ pub const DateTime = struct {
         }
     }
 
+    pub fn dayOfThisYear(self: Self) u16 {
+        var ret: u16 = 0;
+        for (range(self.months)) |_, item| {
+            ret += self.daysInMonth(@intCast(u16, item));
+        }
+        ret += self.days;
+        return ret;
+    }
+
     /// fmt is based on https://momentjs.com/docs/#/displaying/format/
     pub fn format(self: Self, comptime fmt: string, options: std.fmt.FormatOptions, writer: anytype) !void {
         _ = options;
