@@ -239,6 +239,8 @@ pub const DateTime = struct {
                     .D => try writer.print("{}", .{self.days + 1}),
                     .Do => try printOrdinal(writer, self.days + 1),
                     .DDD => try writer.print("{}", .{self.dayOfThisYear() + 1}),
+                    .DDDo => try printOrdinal(writer, self.dayOfThisYear() + 1),
+                    .DDDD => try writer.print("{:0>3}", .{self.dayOfThisYear() + 1}),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }

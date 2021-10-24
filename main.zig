@@ -33,3 +33,6 @@ test { try assertOk(1144509852789, "Qo",   "2nd"); }
 test { try assertOk(1144509852789, "D",    "8"); }
 test { try assertOk(1144509852789, "Do",   "8th"); }
 test { try assertOk(1144509852789, "DD",   "08"); }
+test { try assertOk(1144509852789, "DDD",  "98"); }
+test { try assertOk(1144509852789, "DDDo", "98th"); }
+test { try assertOk(1144509852789, "DDDD", "098"); }
