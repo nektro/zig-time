@@ -246,6 +246,9 @@ pub const DateTime = struct {
                     .dd => try writer.writeAll(@tagName(self.weekday)[0..2]),
                     .dddd => try printLongName(writer, @enumToInt(self.weekday), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
                     .E => try writer.print("{}", .{@enumToInt(self.weekday) + 1}),
+                    .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
+                    .wo => try printOrdinal(writer, self.dayOfThisYear() / 7 + 1),
+                    .ww => try writer.print("{:0>2}", .{self.dayOfThisYear() / 7 + 1}),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
