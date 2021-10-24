@@ -228,11 +228,17 @@ pub const DateTime = struct {
                     .SSS => try writer.print("{:0>3}", .{self.ms}),
                     .MM => try writer.print("{:0>2}", .{self.months + 1}),
                     .z => try writer.writeAll(@tagName(self.timezone)),
+                    .M => try writer.print("{}", .{self.months + 1}),
+                    .Mo => try printOrdinal(writer, self.months + 1),
 
                     .MMM => {
                         const names = [_]string{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
                         try writer.writeAll(names[self.months]);
                     },
+                    .MMMM => try printLongName(writer, self.months, &[_]string{
+                        "January", "February", "March",     "April",   "May",      "June",
+                        "July",    "August",   "September", "October", "November", "December",
+                    }),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
@@ -361,3 +367,17 @@ pub const WeekDay = enum {
         };
     }
 };
+
+fn printOrdinal(writer: anytype, num: u16) !void {
+    try writer.print("{}", .{num});
+    try writer.writeAll(switch (num) {
+        1 => "st",
+        2 => "nd",
+        3 => "rd",
+        else => "th",
+    });
+}
+
+fn printLongName(writer: anytype, index: u16, names: []const string) !void {
+    try writer.writeAll(names[index]);
+}
