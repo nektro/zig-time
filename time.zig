@@ -251,6 +251,9 @@ pub const DateTime = struct {
                     .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
                     .wo => try printOrdinal(writer, self.dayOfThisYear() / 7 + 1),
                     .ww => try writer.print("{:0>2}", .{self.dayOfThisYear() / 7 + 1}),
+                    .Y => try writer.print("{}", .{self.years + 10000}),
+                    .YY => try writer.print("{:0>2}", .{self.years % 100}),
+                    .YYY => try writer.print("{}", .{self.years}),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }

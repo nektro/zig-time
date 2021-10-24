@@ -45,3 +45,7 @@ test { try assertOk(1144509852789, "E",    "7"); }
 test { try assertOk(1144509852789, "w",    "14"); }
 test { try assertOk(1144509852789, "wo",   "14th"); }
 test { try assertOk(1144509852789, "ww",   "14"); }
+test { try assertOk(1144509852789, "Y",    "12006"); }
+test { try assertOk(1144509852789, "YY",   "06"); }
+test { try assertOk(1144509852789, "YYY",  "2006"); }
+test { try assertOk(1144509852789, "YYYY",  "2006"); }
