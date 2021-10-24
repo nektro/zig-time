@@ -36,3 +36,9 @@ test { try assertOk(1144509852789, "DD",   "08"); }
 test { try assertOk(1144509852789, "DDD",  "98"); }
 test { try assertOk(1144509852789, "DDDo", "98th"); }
 test { try assertOk(1144509852789, "DDDD", "098"); }
+test { try assertOk(1144509852789, "d",    "6"); }
+test { try assertOk(1144509852789, "do",   "6th"); }
+test { try assertOk(1144509852789, "dd",   "Sa"); }
+test { try assertOk(1144509852789, "ddd",  "Sat"); }
+test { try assertOk(1144509852789, "dddd", "Saturday"); }
+test { try assertOk(1144509852789, "E",    "7"); }
