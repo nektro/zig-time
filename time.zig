@@ -232,15 +232,8 @@ pub const DateTime = struct {
                     .z => try writer.writeAll(@tagName(self.timezone)),
                     .M => try writer.print("{}", .{self.months + 1}),
                     .Mo => try printOrdinal(writer, self.months + 1),
-
-                    .MMM => {
-                        const names = [_]string{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-                        try writer.writeAll(names[self.months]);
-                    },
-                    .MMMM => try printLongName(writer, self.months, &[_]string{
-                        "January", "February", "March",     "April",   "May",      "June",
-                        "July",    "August",   "September", "October", "November", "December",
-                    }),
+                    .MMM => try printLongName(writer, self.months, &[_]string{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }),
+                    .MMMM => try printLongName(writer, self.months, &[_]string{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
