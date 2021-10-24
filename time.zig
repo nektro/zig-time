@@ -100,6 +100,7 @@ pub const DateTime = struct {
             if (input >= year_len) {
                 result.years += 1;
                 input -= year_len;
+                result.incrementWeekday(year_len);
                 continue;
             }
             break;
@@ -109,6 +110,7 @@ pub const DateTime = struct {
             if (input >= month_len) {
                 result.months += 1;
                 input -= month_len;
+                result.incrementWeekday(month_len);
 
                 if (result.months == 12) {
                     result.years += 1;
