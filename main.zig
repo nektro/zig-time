@@ -28,3 +28,5 @@ test { try assertOk(1144509852789, "Mo",   "4th"); }
 test { try assertOk(1144509852789, "MM",   "04"); }
 test { try assertOk(1144509852789, "MMM",  "Apr"); }
 test { try assertOk(1144509852789, "MMMM", "April"); }
+test { try assertOk(1144509852789, "Q",    "2"); }
+test { try assertOk(1144509852789, "Qo",   "2nd"); }
