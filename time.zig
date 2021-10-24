@@ -169,11 +169,15 @@ pub const DateTime = struct {
         return if (self.isLeapYear()) 366 else 365;
     }
 
-    pub fn daysThisMonth(self: Self) u64 {
-        const norm = [12]u64{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-        const leap = [12]u64{ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    pub fn daysThisMonth(self: Self) u16 {
+        return self.daysInMonth(self.months);
+    }
+
+    fn daysInMonth(self: Self, month: u16) u16 {
+        const norm = [12]u16{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        const leap = [12]u16{ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
         const month_days = if (!self.isLeapYear()) norm else leap;
-        return month_days[self.months];
+        return month_days[month];
     }
 
     fn incrementWeekday(self: *Self, count: u64) void {
