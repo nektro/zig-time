@@ -186,7 +186,7 @@ pub const DateTime = struct {
         }
     }
 
-    /// fmt is defined by https://momentjs.com/docs/#/displaying/format/
+    /// fmt is based on https://momentjs.com/docs/#/displaying/format/
     pub fn format(self: Self, comptime fmt: string, options: std.fmt.FormatOptions, writer: anytype) !void {
         _ = options;
 
