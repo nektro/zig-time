@@ -1,4 +1,6 @@
 # zig-time
+![loc](https://sloc.xyz/github/nektro/zig-time)
+[![license](https://img.shields.io/github/license/nektro/zig-time.svg)](https://github.com/nektro/zig-time/blob/master/LICENSE)
 
 Exposes a `DateTime` structure that can be initialized and acted upon using various methods. All public methods return a new structure.
 
