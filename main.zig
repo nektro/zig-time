@@ -59,3 +59,5 @@ test { try assertOk(1144509852789, "h",    "3"); }
 test { try assertOk(1144509852789, "hh",   "03"); }
 test { try assertOk(1144509852789, "k",    "15"); }
 test { try assertOk(1144509852789, "kk",   "15"); }
+test { try assertOk(1144509852789, "m",    "24"); }
+test { try assertOk(1144509852789, "mm",   "24"); }

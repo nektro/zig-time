@@ -226,7 +226,6 @@ pub const DateTime = struct {
                     .ddd => try writer.writeAll(@tagName(self.weekday)),
                     .DD => try writer.print("{:0>2}", .{self.days + 1}),
                     .YYYY => try writer.print("{:0>4}", .{self.years}),
-                    .mm => try writer.print("{:0>2}", .{self.minutes}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
                     .SSS => try writer.print("{:0>3}", .{self.ms}),
                     .MM => try writer.print("{:0>2}", .{self.months + 1}),
@@ -263,6 +262,8 @@ pub const DateTime = struct {
                     .hh => try writer.print("{:0>2}", .{wrap(self.hours, 12)}),
                     .k => try writer.print("{}", .{wrap(self.hours, 24)}),
                     .kk => try writer.print("{:0>2}", .{wrap(self.hours, 24)}),
+                    .m => try writer.print("{}", .{self.minutes}),
+                    .mm => try writer.print("{:0>2}", .{self.minutes}),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
@@ -410,4 +411,9 @@ fn printOrdinal(writer: anytype, num: u16) !void {
 
 fn printLongName(writer: anytype, index: u16, names: []const string) !void {
     try writer.writeAll(names[index]);
+}
+
+fn wrap(val: u16, at: u16) !u16 {
+    var tmp = val % at;
+    return if (tmp == 0) at else tmp;
 }
