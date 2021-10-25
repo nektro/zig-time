@@ -1,6 +1,7 @@
 const std = @import("std");
 const string = []const u8;
 const range = @import("range").range;
+const time = @This();
 
 pub const DateTime = struct {
     ms: u16,
@@ -161,16 +162,11 @@ pub const DateTime = struct {
     }
 
     pub fn isLeapYear(self: Self) bool {
-        const y = self.years;
-        var ret = false;
-        if (y % 4 == 0) ret = true;
-        if (y % 100 == 0) ret = false;
-        if (y % 400 == 0) ret = true;
-        return ret;
+        return time.isLeapYear(self.years);
     }
 
     pub fn daysThisYear(self: Self) u64 {
-        return if (self.isLeapYear()) 366 else 365;
+        return time.daysInYear(self.years);
     }
 
     pub fn daysThisMonth(self: Self) u16 {
@@ -178,10 +174,7 @@ pub const DateTime = struct {
     }
 
     fn daysInMonth(self: Self, month: u16) u16 {
-        const norm = [12]u16{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-        const leap = [12]u16{ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-        const month_days = if (!self.isLeapYear()) norm else leap;
-        return month_days[month];
+        return time.daysInMonth(self.years, month);
     }
 
     fn incrementWeekday(self: *Self, count: u64) void {
@@ -197,6 +190,29 @@ pub const DateTime = struct {
         }
         ret += self.days;
         return ret;
+    }
+
+    // pub fn toUnix(self: Self) u64 {
+    //     const x = self.toUnix();
+    //     return x / 1000;
+    // }
+
+    pub fn toUnixMilli(self: Self) u64 {
+        var res: u64 = 0;
+        res += self.ms;
+        res += @as(u64, self.seconds) * std.time.ms_per_s;
+        res += @as(u64, self.minutes) * std.time.ms_per_min;
+        res += @as(u64, self.hours) * std.time.ms_per_hour;
+        res += self.daysSinceEpoch() * std.time.ms_per_day;
+        return res;
+    }
+
+    fn daysSinceEpoch(self: Self) u64 {
+        var res: u64 = 0;
+        res += self.days;
+        for (range(self.years - epoch_unix.years)) |_, i| res += time.daysInYear(@intCast(u16, i));
+        for (range(self.months)) |_, i| res += self.daysInMonth(@intCast(u16, i));
+        return res;
     }
 
     /// fmt is based on https://momentjs.com/docs/#/displaying/format/
@@ -239,6 +255,7 @@ pub const DateTime = struct {
                     .DDD => try writer.print("{}", .{self.dayOfThisYear() + 1}),
                     .DDDo => try printOrdinal(writer, self.dayOfThisYear() + 1),
                     .DDDD => try writer.print("{:0>3}", .{self.dayOfThisYear() + 1}),
+
                     .d => try writer.print("{}", .{@enumToInt(self.weekday)}),
                     .do => try printOrdinal(writer, @enumToInt(self.weekday)),
                     .dd => try writer.writeAll(@tagName(self.weekday)[0..2]),
@@ -283,7 +300,8 @@ pub const DateTime = struct {
                     .Z => try writer.writeAll("+00:00"),
                     .ZZ => try writer.writeAll("+0000"),
 
-                    else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
+                    .x => try writer.print("{}", .{self.toUnixMilli()}),
+                    // .X => try writer.print("{}", .{self.toUnix()}),
                 }
                 next = null;
                 s = i;
@@ -365,8 +383,8 @@ pub const DateTime = struct {
         z, // EST CST ... MST PST
         Z, // -07:00 -06:00 ... +06:00 +07:00
         ZZ, // -0700 -0600 ... +0600 +0700
-        X, // unix
         x, // unix milli
+        // X, // unix
     };
 };
 
@@ -413,6 +431,25 @@ pub const Era = enum {
     // BC,
     AD,
 };
+
+pub fn isLeapYear(year: u16) bool {
+    var ret = false;
+    if (year % 4 == 0) ret = true;
+    if (year % 100 == 0) ret = false;
+    if (year % 400 == 0) ret = true;
+    return ret;
+}
+
+pub fn daysInYear(year: u16) u16 {
+    return if (isLeapYear(year)) 366 else 365;
+}
+
+fn daysInMonth(year: u16, month: u16) u16 {
+    const norm = [12]u16{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    const leap = [12]u16{ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    const month_days = if (!isLeapYear(year)) norm else leap;
+    return month_days[month];
+}
 
 fn printOrdinal(writer: anytype, num: u16) !void {
     try writer.print("{}", .{num});
