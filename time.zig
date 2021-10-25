@@ -226,7 +226,6 @@ pub const DateTime = struct {
                     .ddd => try writer.writeAll(@tagName(self.weekday)),
                     .DD => try writer.print("{:0>2}", .{self.days + 1}),
                     .YYYY => try writer.print("{:0>4}", .{self.years}),
-                    .SSS => try writer.print("{:0>3}", .{self.ms}),
                     .MM => try writer.print("{:0>2}", .{self.months + 1}),
                     .z => try writer.writeAll(@tagName(self.timezone)),
                     .M => try writer.print("{}", .{self.months + 1}),
@@ -265,6 +264,9 @@ pub const DateTime = struct {
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
                     .s => try writer.print("{}", .{self.seconds}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
+                    .S => try writer.print("{}", .{self.ms / 100}),
+                    .SS => try writer.print("{:0>2}", .{self.ms / 10}),
+                    .SSS => try writer.print("{:0>3}", .{self.ms}),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
