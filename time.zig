@@ -227,7 +227,6 @@ pub const DateTime = struct {
                     .DD => try writer.print("{:0>2}", .{self.days + 1}),
                     .YYYY => try writer.print("{:0>4}", .{self.years}),
                     .MM => try writer.print("{:0>2}", .{self.months + 1}),
-                    .z => try writer.writeAll(@tagName(self.timezone)),
                     .M => try writer.print("{}", .{self.months + 1}),
                     .Mo => try printOrdinal(writer, self.months + 1),
                     .MMM => try printLongName(writer, self.months, &[_]string{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }),
@@ -267,6 +266,10 @@ pub const DateTime = struct {
                     .S => try writer.print("{}", .{self.ms / 100}),
                     .SS => try writer.print("{:0>2}", .{self.ms / 10}),
                     .SSS => try writer.print("{:0>3}", .{self.ms}),
+
+                    .z => try writer.writeAll(@tagName(self.timezone)),
+                    .Z => try writer.writeAll("+00:00"),
+                    .ZZ => try writer.writeAll("+0000"),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
