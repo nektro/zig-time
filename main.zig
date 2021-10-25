@@ -31,59 +31,86 @@ comptime {
     harness(1634858430000, &.{.{ "YYYY-MM-DD HH:mm:ss", "2021-10-21 23:20:30" }});
     harness(1634858430023, &.{.{ "YYYY-MM-DD HH:mm:ss.SSS", "2021-10-21 23:20:30.023" }});
     harness(1144509852789, &.{.{ "YYYY-MM-DD HH:mm:ss.SSS", "2006-04-08 15:24:12.789" }});
+
+    harness(1635033600000, &.{
+        .{ "H", "0" },  .{ "HH", "00" },
+        .{ "h", "12" }, .{ "hh", "12" },
+        .{ "k", "24" }, .{ "kk", "24" },
+    });
+
+    harness(1635037200000, &.{
+        .{ "H", "1" }, .{ "HH", "01" },
+        .{ "h", "1" }, .{ "hh", "01" },
+        .{ "k", "1" }, .{ "kk", "01" },
+    });
+
+    harness(1635076800000, &.{
+        .{ "H", "12" }, .{ "HH", "12" },
+        .{ "h", "12" }, .{ "hh", "12" },
+        .{ "k", "12" }, .{ "kk", "12" },
+    });
+    harness(1635080400000, &.{
+        .{ "H", "13" }, .{ "HH", "13" },
+        .{ "h", "1" },  .{ "hh", "01" },
+        .{ "k", "13" }, .{ "kk", "13" },
+    });
+
+    harness(1144509852789, &.{
+        .{ "M", "4" },
+        .{ "Mo", "4th" },
+        .{ "MM", "04" },
+        .{ "MMM", "Apr" },
+        .{ "MMMM", "April" },
+
+        .{ "Q", "2" },
+        .{ "Qo", "2nd" },
+
+        .{ "D", "8" },
+        .{ "Do", "8th" },
+        .{ "DD", "08" },
+
+        .{ "DDD", "98" },
+        .{ "DDDo", "98th" },
+        .{ "DDDD", "098" },
+
+        .{ "d", "6" },
+        .{ "do", "6th" },
+        .{ "dd", "Sa" },
+        .{ "ddd", "Sat" },
+        .{ "dddd", "Saturday" },
+        .{ "E", "7" },
+
+        .{ "w", "14" },
+        .{ "wo", "14th" },
+        .{ "ww", "14" },
+
+        .{ "Y", "12006" },
+        .{ "YY", "06" },
+        .{ "YYY", "2006" },
+        .{ "YYYY", "2006" },
+
+        .{ "N", "AD" },
+        .{ "NN", "Anno Domini" },
+
+        .{ "A", "PM" },
+        .{ "a", "pm" },
+
+        .{ "H", "15" },
+        .{ "HH", "15" },
+        .{ "h", "3" },
+        .{ "hh", "03" },
+        .{ "k", "15" },
+        .{ "kk", "15" },
+
+        .{ "m", "24" },
+        .{ "mm", "24" },
+
+        .{ "s", "12" },
+        .{ "ss", "12" },
+
+        .{ "S", "7" },
+        .{ "SS", "78" },
+        .{ "SSS", "789" },
+    });
 }
 
-fn assertOk(unix_ms: u64, comptime format: []const u8, expected: string) !void {
-    const alloc = std.testing.allocator;
-
-    const actual = try time.DateTime.initUnixMs(unix_ms).formatAlloc(alloc, format);
-    defer alloc.free(actual);
-
-    std.testing.expectEqualStrings(expected, actual) catch return error.SkipZigTest;
-}
-
-// zig fmt: off
-// test every field
-test { try assertOk(1144509852789, "M",    "4"); }
-test { try assertOk(1144509852789, "Mo",   "4th"); }
-test { try assertOk(1144509852789, "MM",   "04"); }
-test { try assertOk(1144509852789, "MMM",  "Apr"); }
-test { try assertOk(1144509852789, "MMMM", "April"); }
-test { try assertOk(1144509852789, "Q",    "2"); }
-test { try assertOk(1144509852789, "Qo",   "2nd"); }
-test { try assertOk(1144509852789, "D",    "8"); }
-test { try assertOk(1144509852789, "Do",   "8th"); }
-test { try assertOk(1144509852789, "DD",   "08"); }
-test { try assertOk(1144509852789, "DDD",  "98"); }
-test { try assertOk(1144509852789, "DDDo", "98th"); }
-test { try assertOk(1144509852789, "DDDD", "098"); }
-test { try assertOk(1144509852789, "d",    "6"); }
-test { try assertOk(1144509852789, "do",   "6th"); }
-test { try assertOk(1144509852789, "dd",   "Sa"); }
-test { try assertOk(1144509852789, "ddd",  "Sat"); }
-test { try assertOk(1144509852789, "dddd", "Saturday"); }
-test { try assertOk(1144509852789, "E",    "7"); }
-test { try assertOk(1144509852789, "w",    "14"); }
-test { try assertOk(1144509852789, "wo",   "14th"); }
-test { try assertOk(1144509852789, "ww",   "14"); }
-test { try assertOk(1144509852789, "Y",    "12006"); }
-test { try assertOk(1144509852789, "YY",   "06"); }
-test { try assertOk(1144509852789, "YYY",  "2006"); }
-test { try assertOk(1144509852789, "YYYY",  "2006"); }
-test { try assertOk(1144509852789, "N",    "AD"); }
-test { try assertOk(1144509852789, "NN",   "Anno Domini"); }
-test { try assertOk(1144509852789, "A",    "PM"); }
-test { try assertOk(1144509852789, "a",    "pm"); }
-test { try assertOk(1144509852789, "H",    "15"); }
-test { try assertOk(1144509852789, "HH",   "15"); }
-test { try assertOk(1144509852789, "h",    "3"); }
-test { try assertOk(1144509852789, "hh",   "03"); }
-test { try assertOk(1144509852789, "k",    "15"); }
-test { try assertOk(1144509852789, "kk",   "15"); }
-test { try assertOk(1144509852789, "m",    "24"); }
-test { try assertOk(1144509852789, "mm",   "24"); }
-test { try assertOk(1144509852789, "s",    "12"); }
-test { try assertOk(1144509852789, "ss",   "12"); }
-test { try assertOk(1144509852789, "S",    "7"); }
-test { try assertOk(1144509852789, "SS",   "78"); }
-test { try assertOk(1144509852789, "SSS",  "789"); }
