@@ -78,6 +78,7 @@ comptime {
         .{ "dd", "Sa" },
         .{ "ddd", "Sat" },
         .{ "dddd", "Saturday" },
+        .{ "e", "6" },
         .{ "E", "7" },
 
         .{ "w", "14" },

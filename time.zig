@@ -244,10 +244,13 @@ pub const DateTime = struct {
                     .dd => try writer.writeAll(@tagName(self.weekday)[0..2]),
                     .ddd => try writer.writeAll(@tagName(self.weekday)),
                     .dddd => try printLongName(writer, @enumToInt(self.weekday), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
+                    .e => try writer.print("{}", .{@enumToInt(self.weekday)}),
                     .E => try writer.print("{}", .{@enumToInt(self.weekday) + 1}),
+
                     .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
                     .wo => try printOrdinal(writer, self.dayOfThisYear() / 7 + 1),
                     .ww => try writer.print("{:0>2}", .{self.dayOfThisYear() / 7 + 1}),
+
                     .Y => try writer.print("{}", .{self.years + 10000}),
                     .YY => try writer.print("{:0>2}", .{self.years % 100}),
                     .YYY => try writer.print("{}", .{self.years}),
