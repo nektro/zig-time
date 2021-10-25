@@ -256,6 +256,8 @@ pub const DateTime = struct {
                     .YYY => try writer.print("{}", .{self.years}),
                     .N => try writer.writeAll(@tagName(self.era)),
                     .NN => try writer.writeAll("Anno Domini"),
+                    .A => try printLongName(writer, self.hours / 12, &[_]string{ "AM", "PM" }),
+                    .a => try printLongName(writer, self.hours / 12, &[_]string{ "am", "pm" }),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
