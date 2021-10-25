@@ -61,3 +61,5 @@ test { try assertOk(1144509852789, "k",    "15"); }
 test { try assertOk(1144509852789, "kk",   "15"); }
 test { try assertOk(1144509852789, "m",    "24"); }
 test { try assertOk(1144509852789, "mm",   "24"); }
+test { try assertOk(1144509852789, "s",    "12"); }
+test { try assertOk(1144509852789, "ss",   "12"); }
