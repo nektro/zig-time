@@ -223,24 +223,26 @@ pub const DateTime = struct {
 
             if (next) |tag| {
                 switch (tag) {
-                    .ddd => try writer.writeAll(@tagName(self.weekday)),
-                    .DD => try writer.print("{:0>2}", .{self.days + 1}),
-                    .YYYY => try writer.print("{:0>4}", .{self.years}),
                     .MM => try writer.print("{:0>2}", .{self.months + 1}),
                     .M => try writer.print("{}", .{self.months + 1}),
                     .Mo => try printOrdinal(writer, self.months + 1),
                     .MMM => try printLongName(writer, self.months, &[_]string{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }),
                     .MMMM => try printLongName(writer, self.months, &[_]string{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }),
+
                     .Q => try writer.print("{}", .{self.months / 3 + 1}),
                     .Qo => try printOrdinal(writer, self.months / 3 + 1),
+
                     .D => try writer.print("{}", .{self.days + 1}),
                     .Do => try printOrdinal(writer, self.days + 1),
+                    .DD => try writer.print("{:0>2}", .{self.days + 1}),
+
                     .DDD => try writer.print("{}", .{self.dayOfThisYear() + 1}),
                     .DDDo => try printOrdinal(writer, self.dayOfThisYear() + 1),
                     .DDDD => try writer.print("{:0>3}", .{self.dayOfThisYear() + 1}),
                     .d => try writer.print("{}", .{@enumToInt(self.weekday)}),
                     .do => try printOrdinal(writer, @enumToInt(self.weekday)),
                     .dd => try writer.writeAll(@tagName(self.weekday)[0..2]),
+                    .ddd => try writer.writeAll(@tagName(self.weekday)),
                     .dddd => try printLongName(writer, @enumToInt(self.weekday), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
                     .E => try writer.print("{}", .{@enumToInt(self.weekday) + 1}),
                     .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
@@ -249,20 +251,27 @@ pub const DateTime = struct {
                     .Y => try writer.print("{}", .{self.years + 10000}),
                     .YY => try writer.print("{:0>2}", .{self.years % 100}),
                     .YYY => try writer.print("{}", .{self.years}),
+                    .YYYY => try writer.print("{:0>4}", .{self.years}),
+
                     .N => try writer.writeAll(@tagName(self.era)),
                     .NN => try writer.writeAll("Anno Domini"),
+
                     .A => try printLongName(writer, self.hours / 12, &[_]string{ "AM", "PM" }),
                     .a => try printLongName(writer, self.hours / 12, &[_]string{ "am", "pm" }),
+
                     .H => try writer.print("{}", .{self.hours}),
                     .HH => try writer.print("{:0>2}", .{self.hours}),
                     .h => try writer.print("{}", .{wrap(self.hours, 12)}),
                     .hh => try writer.print("{:0>2}", .{wrap(self.hours, 12)}),
                     .k => try writer.print("{}", .{wrap(self.hours, 24)}),
                     .kk => try writer.print("{:0>2}", .{wrap(self.hours, 24)}),
+
                     .m => try writer.print("{}", .{self.minutes}),
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
+
                     .s => try writer.print("{}", .{self.seconds}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
+
                     .S => try writer.print("{}", .{self.ms / 100}),
                     .SS => try writer.print("{:0>2}", .{self.ms / 10}),
                     .SSS => try writer.print("{:0>3}", .{self.ms}),
