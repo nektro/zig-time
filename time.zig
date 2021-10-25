@@ -226,7 +226,6 @@ pub const DateTime = struct {
                     .ddd => try writer.writeAll(@tagName(self.weekday)),
                     .DD => try writer.print("{:0>2}", .{self.days + 1}),
                     .YYYY => try writer.print("{:0>4}", .{self.years}),
-                    .HH => try writer.print("{:0>2}", .{self.hours}),
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
                     .ss => try writer.print("{:0>2}", .{self.seconds}),
                     .SSS => try writer.print("{:0>3}", .{self.ms}),
@@ -258,6 +257,12 @@ pub const DateTime = struct {
                     .NN => try writer.writeAll("Anno Domini"),
                     .A => try printLongName(writer, self.hours / 12, &[_]string{ "AM", "PM" }),
                     .a => try printLongName(writer, self.hours / 12, &[_]string{ "am", "pm" }),
+                    .H => try writer.print("{}", .{self.hours}),
+                    .HH => try writer.print("{:0>2}", .{self.hours}),
+                    .h => try writer.print("{}", .{wrap(self.hours, 12)}),
+                    .hh => try writer.print("{:0>2}", .{wrap(self.hours, 12)}),
+                    .k => try writer.print("{}", .{wrap(self.hours, 24)}),
+                    .kk => try writer.print("{:0>2}", .{wrap(self.hours, 24)}),
 
                     else => @compileError("'" ++ @tagName(tag) ++ "' not currently supported"),
                 }
