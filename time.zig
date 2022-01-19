@@ -178,7 +178,8 @@ pub const DateTime = struct {
     }
 
     fn incrementWeekday(self: *Self, count: u64) void {
-        for (range(count % 7)) |_| {
+        var i = count % 7;
+        while (i > 0) : (i -= 1) {
             self.weekday = self.weekday.next();
         }
     }
