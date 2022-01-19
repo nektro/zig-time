@@ -165,7 +165,7 @@ pub const DateTime = struct {
         return time.isLeapYear(self.years);
     }
 
-    pub fn daysThisYear(self: Self) u64 {
+    pub fn daysThisYear(self: Self) u16 {
         return time.daysInYear(self.years);
     }
 
