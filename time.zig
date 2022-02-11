@@ -404,6 +404,11 @@ pub const format = struct {
 
 pub const TimeZone = enum {
     UTC,
+
+    pub fn jsonStringify(self: @This(), options: std.json.StringifyOptions, out_stream: anytype) !void {
+        _ = options;
+        try out_stream.writeAll(@tagName(self));
+    }
 };
 
 pub const WeekDay = enum {
@@ -426,11 +431,21 @@ pub const WeekDay = enum {
             .Sat => .Sun,
         };
     }
+
+    pub fn jsonStringify(self: @This(), options: std.json.StringifyOptions, out_stream: anytype) !void {
+        _ = options;
+        try out_stream.writeAll(@tagName(self));
+    }
 };
 
 pub const Era = enum {
     // BC,
     AD,
+
+    pub fn jsonStringify(self: @This(), options: std.json.StringifyOptions, out_stream: anytype) !void {
+        _ = options;
+        try out_stream.writeAll(@tagName(self));
+    }
 };
 
 pub fn isLeapYear(year: u16) bool {
