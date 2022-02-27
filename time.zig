@@ -1,6 +1,7 @@
 const std = @import("std");
 const string = []const u8;
 const range = @import("range").range;
+const extras = @import("extras");
 const time = @This();
 
 pub const DateTime = struct {
@@ -405,10 +406,7 @@ pub const format = struct {
 pub const TimeZone = enum {
     UTC,
 
-    pub fn jsonStringify(self: @This(), options: std.json.StringifyOptions, out_stream: anytype) !void {
-        _ = options;
-        try out_stream.writeAll(@tagName(self));
-    }
+    usingnamespace extras.TagNameJsonStringifyMixin(@This());
 };
 
 pub const WeekDay = enum {
@@ -432,20 +430,14 @@ pub const WeekDay = enum {
         };
     }
 
-    pub fn jsonStringify(self: @This(), options: std.json.StringifyOptions, out_stream: anytype) !void {
-        _ = options;
-        try out_stream.writeAll(@tagName(self));
-    }
+    usingnamespace extras.TagNameJsonStringifyMixin(@This());
 };
 
 pub const Era = enum {
     // BC,
     AD,
 
-    pub fn jsonStringify(self: @This(), options: std.json.StringifyOptions, out_stream: anytype) !void {
-        _ = options;
-        try out_stream.writeAll(@tagName(self));
-    }
+    usingnamespace extras.TagNameJsonStringifyMixin(@This());
 };
 
 pub fn isLeapYear(year: u16) bool {
