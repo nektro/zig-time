@@ -223,9 +223,6 @@ pub const DateTime = struct {
 
         if (fmt.len == 0) @compileError("DateTime: format string can't be empty");
 
-        _ = writer;
-        _ = self;
-
         @setEvalBranchQuota(100000);
 
         comptime var s = 0;
