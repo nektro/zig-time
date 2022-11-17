@@ -321,8 +321,6 @@ pub const DateTime = struct {
                 },
                 else => {},
             }
-
-            if (i < fmt.len - 1) @compileError(comptime std.fmt.comptimePrint("'{s}' is not a valid format sequence", .{fmt[s..e]}));
         }
     }
 
