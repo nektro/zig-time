@@ -1,6 +1,6 @@
 const std = @import("std");
 const string = []const u8;
-const range = @import("range").range;
+const range = extras.range;
 const extras = @import("extras");
 const time = @This();
 
