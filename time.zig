@@ -187,7 +187,7 @@ pub const DateTime = struct {
 
     pub fn dayOfThisYear(self: Self) u16 {
         var ret: u16 = 0;
-        for (range(self.months)) |_, item| {
+        for (range(self.months), 0..) |_, item| {
             ret += self.daysInMonth(@intCast(u16, item));
         }
         ret += self.days;
@@ -212,8 +212,8 @@ pub const DateTime = struct {
     fn daysSinceEpoch(self: Self) u64 {
         var res: u64 = 0;
         res += self.days;
-        for (range(self.years - epoch_unix.years)) |_, i| res += time.daysInYear(@intCast(u16, i));
-        for (range(self.months)) |_, i| res += self.daysInMonth(@intCast(u16, i));
+        for (0..self.years - epoch_unix.years) |i| res += time.daysInYear(@intCast(u16, i));
+        for (0..self.months) |i| res += self.daysInMonth(@intCast(u16, i));
         return res;
     }
 
@@ -228,7 +228,7 @@ pub const DateTime = struct {
         comptime var s = 0;
         comptime var e = 0;
         comptime var next: ?FormatSeq = null;
-        inline for (fmt) |c, i| {
+        inline for (fmt, 0..) |c, i| {
             e = i + 1;
 
             if (comptime std.meta.stringToEnum(FormatSeq, fmt[s..e])) |tag| {
