@@ -383,6 +383,12 @@ pub const DateTime = struct {
         x, // unix milli
         X, // unix
     };
+
+    pub fn since(self: Self, other_in_the_past: Self) Duration {
+        return Duration{
+            .ms = self.toUnixMilli() - other_in_the_past.toUnixMilli(),
+        };
+    }
 };
 
 pub const format = struct {
@@ -472,3 +478,7 @@ fn wrap(val: u16, at: u16) !u16 {
     var tmp = val % at;
     return if (tmp == 0) at else tmp;
 }
+
+pub const Duration = struct {
+    ms: u64,
+};
