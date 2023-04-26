@@ -194,10 +194,10 @@ pub const DateTime = struct {
         return ret;
     }
 
-    // pub fn toUnix(self: Self) u64 {
-    //     const x = self.toUnix();
-    //     return x / 1000;
-    // }
+    pub fn toUnix(self: Self) u64 {
+        const x = self.toUnix();
+        return x / 1000;
+    }
 
     pub fn toUnixMilli(self: Self) u64 {
         var res: u64 = 0;
@@ -300,7 +300,7 @@ pub const DateTime = struct {
                     .ZZ => try writer.writeAll("+0000"),
 
                     .x => try writer.print("{}", .{self.toUnixMilli()}),
-                    // .X => try writer.print("{}", .{self.toUnix()}),
+                    .X => try writer.print("{}", .{self.toUnix()}),
                 }
                 next = null;
                 s = i;
@@ -381,7 +381,7 @@ pub const DateTime = struct {
         Z, // -07:00 -06:00 ... +06:00 +07:00
         ZZ, // -0700 -0600 ... +0600 +0700
         x, // unix milli
-        // X, // unix
+        X, // unix
     };
 };
 
