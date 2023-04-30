@@ -186,7 +186,7 @@ pub const DateTime = struct {
 
     pub fn dayOfThisYear(self: Self) u16 {
         var ret: u16 = 0;
-        for (0..self.months, 0..) |_, item| {
+        for (0..self.months) |item| {
             ret += self.daysInMonth(@intCast(u16, item));
         }
         ret += self.days;
