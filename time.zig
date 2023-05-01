@@ -1,6 +1,5 @@
 const std = @import("std");
 const string = []const u8;
-const range = extras.range;
 const extras = @import("extras");
 const time = @This();
 
@@ -187,7 +186,7 @@ pub const DateTime = struct {
 
     pub fn dayOfThisYear(self: Self) u16 {
         var ret: u16 = 0;
-        for (range(self.months), 0..) |_, item| {
+        for (0..self.months) |item| {
             ret += self.daysInMonth(@intCast(u16, item));
         }
         ret += self.days;
