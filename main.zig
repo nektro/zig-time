@@ -120,4 +120,7 @@ comptime {
         .{ "x", "1144509852789" },
         .{ "X", "1144509852" },
     });
+
+    // https://github.com/nektro/zig-time/issues/3
+    harness(1144509852789, &.{.{ "YYYYMM", "200604" }});
 }
