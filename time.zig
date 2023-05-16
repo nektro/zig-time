@@ -473,7 +473,7 @@ fn printLongName(writer: anytype, index: u16, names: []const string) !void {
     try writer.writeAll(names[index]);
 }
 
-fn wrap(val: u16, at: u16) !u16 {
+fn wrap(val: u16, at: u16) u16 {
     var tmp = val % at;
     return if (tmp == 0) at else tmp;
 }
