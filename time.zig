@@ -194,7 +194,7 @@ pub const DateTime = struct {
     }
 
     pub fn toUnix(self: Self) u64 {
-        const x = self.toUnix();
+        const x = self.toUnixMilli();
         return x / 1000;
     }
 
