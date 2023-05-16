@@ -7,8 +7,7 @@ pub fn main() !void {
 }
 
 fn harness(comptime seed: u64, comptime expects: []const [2]string) void {
-    var i: usize = 0;
-    while (i < expects.len) : (i += 1) {
+    for (0..expects.len) |i| {
         _ = Case(seed, expects[i][0], expects[i][1]);
     }
 }
