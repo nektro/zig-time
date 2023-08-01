@@ -37,7 +37,7 @@ pub const DateTime = struct {
     }
 
     pub fn now() Self {
-        return initUnixMs(@intCast(u64, std.time.milliTimestamp()));
+        return initUnixMs(@intCast(std.time.milliTimestamp()));
     }
 
     pub const epoch_unix = Self{
@@ -68,28 +68,28 @@ pub const DateTime = struct {
     pub fn addMs(self: Self, count: u64) Self {
         if (count == 0) return self;
         var result = self;
-        result.ms += @intCast(u16, count % 1000);
+        result.ms += @intCast(count % 1000);
         return result.addSecs(count / 1000);
     }
 
     pub fn addSecs(self: Self, count: u64) Self {
         if (count == 0) return self;
         var result = self;
-        result.seconds += @intCast(u16, count % 60);
+        result.seconds += @intCast(count % 60);
         return result.addMins(count / 60);
     }
 
     pub fn addMins(self: Self, count: u64) Self {
         if (count == 0) return self;
         var result = self;
-        result.minutes += @intCast(u16, count % 60);
+        result.minutes += @intCast(count % 60);
         return result.addHours(count / 60);
     }
 
     pub fn addHours(self: Self, count: u64) Self {
         if (count == 0) return self;
         var result = self;
-        result.hours += @intCast(u16, count % 24);
+        result.hours += @intCast(count % 24);
         return result.addDays(count / 24);
     }
 
@@ -132,7 +132,7 @@ pub const DateTime = struct {
                 result.days = 0;
                 result.incrementWeekday(left);
             }
-            result.days += @intCast(u16, input);
+            result.days += @intCast(input);
             result.incrementWeekday(input);
 
             if (result.months == 12) {
@@ -187,7 +187,7 @@ pub const DateTime = struct {
     pub fn dayOfThisYear(self: Self) u16 {
         var ret: u16 = 0;
         for (0..self.months) |item| {
-            ret += self.daysInMonth(@intCast(u16, item));
+            ret += self.daysInMonth(@intCast(item));
         }
         ret += self.days;
         return ret;
@@ -211,8 +211,8 @@ pub const DateTime = struct {
     fn daysSinceEpoch(self: Self) u64 {
         var res: u64 = 0;
         res += self.days;
-        for (0..self.years - epoch_unix.years) |i| res += time.daysInYear(@intCast(u16, i));
-        for (0..self.months) |i| res += self.daysInMonth(@intCast(u16, i));
+        for (0..self.years - epoch_unix.years) |i| res += time.daysInYear(@intCast(i));
+        for (0..self.months) |i| res += self.daysInMonth(@intCast(i));
         return res;
     }
 
@@ -254,13 +254,13 @@ pub const DateTime = struct {
                     .DDDo => try printOrdinal(writer, self.dayOfThisYear() + 1),
                     .DDDD => try writer.print("{:0>3}", .{self.dayOfThisYear() + 1}),
 
-                    .d => try writer.print("{}", .{@enumToInt(self.weekday)}),
-                    .do => try printOrdinal(writer, @enumToInt(self.weekday)),
+                    .d => try writer.print("{}", .{@intFromEnum(self.weekday)}),
+                    .do => try printOrdinal(writer, @intFromEnum(self.weekday)),
                     .dd => try writer.writeAll(@tagName(self.weekday)[0..2]),
                     .ddd => try writer.writeAll(@tagName(self.weekday)),
-                    .dddd => try printLongName(writer, @enumToInt(self.weekday), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
-                    .e => try writer.print("{}", .{@enumToInt(self.weekday)}),
-                    .E => try writer.print("{}", .{@enumToInt(self.weekday) + 1}),
+                    .dddd => try printLongName(writer, @intFromEnum(self.weekday), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
+                    .e => try writer.print("{}", .{@intFromEnum(self.weekday)}),
+                    .E => try writer.print("{}", .{@intFromEnum(self.weekday) + 1}),
 
                     .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
                     .wo => try printOrdinal(writer, self.dayOfThisYear() / 7 + 1),
