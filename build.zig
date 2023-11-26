@@ -9,6 +9,6 @@ pub fn build(b: *std.build.Builder) void {
 
     const run_t = b.addRunArtifact(t);
 
-    const t_step = b.step("run", "Run all the tests.");
+    const t_step = b.step("test", "Run all the tests.");
     t_step.dependOn(&run_t.step);
 }
