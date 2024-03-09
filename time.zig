@@ -13,7 +13,6 @@ pub const DateTime = struct {
     years: u16,
     timezone: TimeZone,
     weekday: WeekDay,
-    era: Era,
 
     const Self = @This();
 
@@ -50,7 +49,6 @@ pub const DateTime = struct {
         .years = 1970,
         .timezone = .UTC,
         .weekday = .Thu,
-        .era = .AD,
     };
 
     pub fn eql(self: Self, other: Self) bool {
@@ -271,7 +269,7 @@ pub const DateTime = struct {
                     .YYY => try writer.print("{}", .{self.years}),
                     .YYYY => try writer.print("{:0>4}", .{self.years}),
 
-                    .N => try writer.writeAll(@tagName(self.era)),
+                    .N => try writer.writeAll(@tagName(self.era())),
                     .NN => try writer.writeAll("Anno Domini"),
 
                     .A => try printLongName(writer, self.hours / 12, &[_]string{ "AM", "PM" }),
@@ -387,6 +385,11 @@ pub const DateTime = struct {
         return Duration{
             .ms = self.toUnixMilli() - other_in_the_past.toUnixMilli(),
         };
+    }
+
+    pub fn era(self: Self) Era {
+        if (self.years >= 0) return .AD;
+        @compileError("TODO");
     }
 };
 
