@@ -12,7 +12,6 @@ pub const DateTime = struct {
     months: u16,
     years: u16,
     timezone: TimeZone,
-    weekday: WeekDay,
 
     const Self = @This();
 
@@ -48,7 +47,6 @@ pub const DateTime = struct {
         .months = 0,
         .years = 1970,
         .timezone = .UTC,
-        .weekday = .Thu,
     };
 
     pub fn eql(self: Self, other: Self) bool {
@@ -101,7 +99,6 @@ pub const DateTime = struct {
             if (input >= year_len) {
                 result.years += 1;
                 input -= year_len;
-                result.incrementWeekday(year_len);
                 continue;
             }
             break;
@@ -111,7 +108,6 @@ pub const DateTime = struct {
             if (input >= month_len) {
                 result.months += 1;
                 input -= month_len;
-                result.incrementWeekday(month_len);
 
                 if (result.months == 12) {
                     result.years += 1;
@@ -128,10 +124,8 @@ pub const DateTime = struct {
                 input -= left;
                 result.months += 1;
                 result.days = 0;
-                result.incrementWeekday(left);
             }
             result.days += @intCast(input);
-            result.incrementWeekday(input);
 
             if (result.months == 12) {
                 result.years += 1;
@@ -173,13 +167,6 @@ pub const DateTime = struct {
 
     fn daysInMonth(self: Self, month: u16) u16 {
         return time.daysInMonth(self.years, month);
-    }
-
-    fn incrementWeekday(self: *Self, count: u64) void {
-        var i = count % 7;
-        while (i > 0) : (i -= 1) {
-            self.weekday = self.weekday.next();
-        }
     }
 
     pub fn dayOfThisYear(self: Self) u16 {
@@ -252,13 +239,13 @@ pub const DateTime = struct {
                     .DDDo => try printOrdinal(writer, self.dayOfThisYear() + 1),
                     .DDDD => try writer.print("{:0>3}", .{self.dayOfThisYear() + 1}),
 
-                    .d => try writer.print("{}", .{@intFromEnum(self.weekday)}),
-                    .do => try printOrdinal(writer, @intFromEnum(self.weekday)),
-                    .dd => try writer.writeAll(@tagName(self.weekday)[0..2]),
-                    .ddd => try writer.writeAll(@tagName(self.weekday)),
-                    .dddd => try printLongName(writer, @intFromEnum(self.weekday), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
-                    .e => try writer.print("{}", .{@intFromEnum(self.weekday)}),
-                    .E => try writer.print("{}", .{@intFromEnum(self.weekday) + 1}),
+                    .d => try writer.print("{}", .{@intFromEnum(self.weekday())}),
+                    .do => try printOrdinal(writer, @intFromEnum(self.weekday())),
+                    .dd => try writer.writeAll(@tagName(self.weekday())[0..2]),
+                    .ddd => try writer.writeAll(@tagName(self.weekday())),
+                    .dddd => try printLongName(writer, @intFromEnum(self.weekday()), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
+                    .e => try writer.print("{}", .{@intFromEnum(self.weekday())}),
+                    .E => try writer.print("{}", .{@intFromEnum(self.weekday()) + 1}),
 
                     .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
                     .wo => try printOrdinal(writer, self.dayOfThisYear() / 7 + 1),
@@ -390,6 +377,15 @@ pub const DateTime = struct {
     pub fn era(self: Self) Era {
         if (self.years >= 0) return .AD;
         @compileError("TODO");
+    }
+
+    pub fn weekday(self: Self) WeekDay {
+        var i = self.daysSinceEpoch() % 7;
+        var result = WeekDay.Thu; // weekday of epoch_unix
+        while (i > 0) : (i -= 1) {
+            result = result.next();
+        }
+        return result;
     }
 };
 
