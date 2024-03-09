@@ -5,11 +5,11 @@ const time = @This();
 
 pub const DateTime = struct {
     ms: u16,
-    seconds: u16,
-    minutes: u16,
-    hours: u16,
-    days: u16,
-    months: u16,
+    seconds: u8,
+    minutes: u8,
+    hours: u8,
+    days: u8,
+    months: u8,
     years: u16,
     timezone: TimeZone,
 
