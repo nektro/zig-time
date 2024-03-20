@@ -1,0 +1,10 @@
+.{
+    .name = "time",
+    .version = "0.1.0",
+    .dependencies = .{
+        .extras = .{
+            .url = "https://github.com/nektro/zig-extras/archive/master.tar.gz",
+            .hash = "12203cc9c306e25cafb7ff99a317cb5a402f42dd257fbb26ef6126c7e009742d1712",
+        } 
+    }
+}
