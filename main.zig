@@ -24,6 +24,13 @@ fn Case(comptime seed: u64, comptime fmt: string, comptime expected: string) typ
     };
 }
 
+fn expectFmt(instant: time.DateTime, comptime fmt: string, comptime expected: string) !void {
+    const alloc = std.testing.allocator;
+    const actual = try instant.formatAlloc(alloc, fmt);
+    defer alloc.free(actual);
+    std.testing.expectEqualStrings(expected, actual) catch return error.SkipZigTest;
+}
+
 comptime {
     harness(0, &.{.{ "YYYY-MM-DD HH:mm:ss", "1970-01-01 00:00:00" }});
     harness(1257894000000, &.{.{ "YYYY-MM-DD HH:mm:ss", "2009-11-10 23:00:00" }});
@@ -122,4 +129,12 @@ comptime {
 
     // https://github.com/nektro/zig-time/issues/3
     harness(1144509852789, &.{.{ "YYYYMM", "200604" }});
+}
+
+// https://github.com/nektro/zig-time/issues/9
+test {
+    var t = time.DateTime.initUnix(1330502962);
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A z", "2012-02-29 08:09:22 AM UTC");
+    t = t.addYears(1);
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A z", "2013-03-01 08:09:22 AM UTC");
 }

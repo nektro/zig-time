@@ -127,12 +127,22 @@ pub const DateTime = struct {
             }
             result.days += @intCast(input);
 
+            if (result.days == result.daysThisMonth()) {
+                result.months += 1;
+                result.days = 0;
+            }
             if (result.months == 12) {
                 result.years += 1;
                 result.months = 0;
             }
         }
 
+        std.debug.assert(result.ms < 1000);
+        std.debug.assert(result.seconds < 60);
+        std.debug.assert(result.minutes < 60);
+        std.debug.assert(result.hours < 24);
+        std.debug.assert(result.days < result.daysThisMonth());
+        std.debug.assert(result.months < 12);
         return result;
     }
 
@@ -149,8 +159,11 @@ pub const DateTime = struct {
     }
 
     pub fn addYears(self: Self, count: u64) Self {
-        if (count == 0) return self;
-        return self.addMonths(count * 12);
+        var result = self;
+        for (0..count) |_| {
+            result = result.addDays(result.daysThisYear());
+        }
+        return result;
     }
 
     pub fn isLeapYear(self: Self) bool {
