@@ -8,6 +8,6 @@ Currently handles dates and times based on the [Proleptic Gregorian calendar](ht
 
 Does not currently support time zones outside of UTC.
 
-Does not currently handle leap seconds.
+Does not handle leap seconds.
 
 See the `FormatSeq` structure for display information on what to pass as a `fmt` string.
