@@ -125,6 +125,26 @@ comptime {
 
         .{ "x", "1144509852789" },
         .{ "X", "1144509852" },
+
+        .{ time.format.LT, "3:24 PM" },
+
+        .{ time.format.LTS, "3:24:12 PM" },
+
+        .{ time.format.L, "04/08/2006" },
+
+        .{ time.format.l, "4/8/2006" },
+
+        .{ time.format.LL, "April 8, 2006" },
+
+        .{ time.format.ll, "Apr 8, 2006" },
+
+        .{ time.format.LLL, "April 8, 2006 3:24 PM" },
+
+        .{ time.format.lll, "Apr 8, 2006 3:24 PM" },
+
+        .{ time.format.LLLL, "Saturday, April 8, 2006 3:24 PM" },
+
+        .{ time.format.llll, "Sat, Apr 8, 2006 3:24 PM" },
     });
 
     // https://github.com/nektro/zig-time/issues/3

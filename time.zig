@@ -311,6 +311,7 @@ pub const DateTime = struct {
                 '.',
                 'T',
                 'W',
+                '/',
                 => {
                     try writer.writeAll(&.{c});
                     s = i + 1;
@@ -403,16 +404,16 @@ pub const DateTime = struct {
 };
 
 pub const format = struct {
-    pub const LT = "";
-    pub const LTS = "";
-    pub const L = "";
-    pub const l = "";
-    pub const LL = "";
-    pub const ll = "";
-    pub const LLL = "";
-    pub const lll = "";
-    pub const LLLL = "";
-    pub const llll = "";
+    pub const LT = "h:mm A";
+    pub const LTS = "h:mm:ss A";
+    pub const L = "MM/DD/YYYY";
+    pub const l = "M/D/YYY";
+    pub const LL = "MMMM D, YYYY";
+    pub const ll = "MMM D, YYY";
+    pub const LLL = LL ++ " " ++ LT;
+    pub const lll = ll ++ " " ++ LT;
+    pub const LLLL = "dddd, " ++ LLL;
+    pub const llll = "ddd, " ++ lll;
 };
 
 pub const TimeZone = enum {
