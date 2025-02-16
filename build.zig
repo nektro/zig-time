@@ -7,7 +7,7 @@ pub fn build(b: *std.Build) void {
     const disable_llvm = b.option(bool, "disable_llvm", "use the non-llvm zig codegen") orelse false;
 
     const t = b.addTest(.{
-        .root_source_file = b.path("main.zig"),
+        .root_source_file = b.path("test.zig"),
         .target = target,
         .optimize = mode,
     });
