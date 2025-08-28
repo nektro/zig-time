@@ -16,6 +16,7 @@ pub fn build(b: *std.Build) void {
     t.use_lld = !disable_llvm;
 
     const run_t = b.addRunArtifact(t);
+    run_t.setCwd(b.path("."));
     run_t.has_side_effects = true;
 
     const t_step = b.step("test", "Run all library tests");
