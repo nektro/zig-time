@@ -279,8 +279,8 @@ pub const DateTime = struct {
                     .HH => try writer.print("{:0>2}", .{self.hours}),
                     .h => try writer.print("{}", .{wrap(self.hours, 12)}),
                     .hh => try writer.print("{:0>2}", .{wrap(self.hours, 12)}),
-                    .k => try writer.print("{}", .{wrap(self.hours, 24)}),
-                    .kk => try writer.print("{:0>2}", .{wrap(self.hours, 24)}),
+                    .k => try writer.print("{}", .{wrap(self.hours, 23)}),
+                    .kk => try writer.print("{:0>2}", .{wrap(self.hours, 23)}),
 
                     .m => try writer.print("{}", .{self.minutes}),
                     .mm => try writer.print("{:0>2}", .{self.minutes}),
