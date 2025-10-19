@@ -24,14 +24,15 @@ pub const DateTime = struct {
     }
 
     /// Caller asserts that this is > epoch
-    pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16) Self {
+    pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16, ms: u16) Self {
         return epoch_unix
             .addYears(year - epoch_unix.years)
             .addMonths(month)
             .addDays(day)
             .addHours(hr)
             .addMins(min)
-            .addSecs(sec);
+            .addSecs(sec)
+            .addMs(ms);
     }
 
     pub fn now() Self {
@@ -48,6 +49,16 @@ pub const DateTime = struct {
         .years = 1970,
         .timezone = .UTC,
     };
+
+    pub fn toISOString(self: Self) [20]u8 {
+        // "2021-10-21T23:20:30Z"
+        var result: [20]u8 = @splat(0);
+        var fbs = std.io.fixedBufferStream(&result);
+        self.format("YYYY-MM-DD HH:mm:ss", .{}, fbs.writer()) catch unreachable;
+        result[10] = 'T';
+        result[19] = 'Z';
+        return result;
+    }
 
     pub fn eql(self: Self, other: Self) bool {
         return self.ms == other.ms and
@@ -120,7 +131,7 @@ pub const DateTime = struct {
         {
             const month_len = result.daysThisMonth();
             if (result.days + input > month_len) {
-                const left = month_len - result.days;
+                const left = month_len -| result.days;
                 input -= left;
                 result.months += 1;
                 result.days = 0;
@@ -146,15 +157,21 @@ pub const DateTime = struct {
         return result;
     }
 
+    pub fn addWeeks(self: Self, count: u64) Self {
+        if (count == 0) return self;
+        return self.addDays(7).addWeeks(count - 1);
+    }
+
     pub fn addMonths(self: Self, count: u64) Self {
         if (count == 0) return self;
         var result = self;
         var input = count;
-        while (input > 0) {
-            const new = result.addDays(result.daysThisMonth());
-            result = new;
-            input -= 1;
-        }
+        result.years += @intCast(input / 12);
+        input %= 12;
+        result.months += @intCast(input);
+        if (result.months >= 12) result.years += 1;
+        result.months %= 12;
+        result.days = @min(result.days, result.daysInMonth(result.months) - 1);
         return result;
     }
 
@@ -164,6 +181,11 @@ pub const DateTime = struct {
             result = result.addDays(result.daysThisYear());
         }
         return result;
+    }
+
+    pub fn addQuarters(self: Self, count: u64) Self {
+        if (count == 0) return self;
+        return self.addMonths(3).addQuarters(count - 1);
     }
 
     pub fn isLeapYear(self: Self) bool {
@@ -199,10 +221,10 @@ pub const DateTime = struct {
     pub fn toUnixMilli(self: Self) u64 {
         var res: u64 = 0;
         res += self.ms;
-        res += @as(u64, self.seconds) * std.time.ms_per_s;
-        res += @as(u64, self.minutes) * std.time.ms_per_min;
-        res += @as(u64, self.hours) * std.time.ms_per_hour;
-        res += self.daysSinceEpoch() * std.time.ms_per_day;
+        res += @as(u64, self.seconds) * ms_per_s;
+        res += @as(u64, self.minutes) * ms_per_min;
+        res += @as(u64, self.hours) * ms_per_hour;
+        res += self.daysSinceEpoch() * ms_per_day;
         return res;
     }
 

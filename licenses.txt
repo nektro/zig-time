@@ -1,4 +1,5 @@
 MIT:
 = https://spdx.org/licenses/MIT
 - This
+- git https://github.com/nektro/zig-expect
 - git https://github.com/nektro/zig-extras
