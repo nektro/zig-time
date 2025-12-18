@@ -13,18 +13,16 @@ pub const DateTime = struct {
     years: u16,
     timezone: TimeZone,
 
-    const Self = @This();
-
-    pub fn initUnixMs(unix: u64) Self {
+    pub fn initUnixMs(unix: u64) DateTime {
         return epoch_unix.addMs(unix);
     }
 
-    pub fn initUnix(unix: u64) Self {
+    pub fn initUnix(unix: u64) DateTime {
         return epoch_unix.addSecs(unix);
     }
 
     /// Caller asserts that this is > epoch
-    pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16, ms: u16) Self {
+    pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16, ms: u16) DateTime {
         return epoch_unix
             .addYears(year - epoch_unix.years)
             .addMonths(month)
@@ -35,11 +33,11 @@ pub const DateTime = struct {
             .addMs(ms);
     }
 
-    pub fn now() Self {
+    pub fn now() DateTime {
         return initUnixMs(@intCast(std.time.milliTimestamp()));
     }
 
-    pub const epoch_unix = Self{
+    pub const epoch_unix = DateTime{
         .ms = 0,
         .seconds = 0,
         .minutes = 0,
@@ -50,7 +48,7 @@ pub const DateTime = struct {
         .timezone = .UTC,
     };
 
-    pub fn toISOString(self: Self) [20]u8 {
+    pub fn toISOString(self: DateTime) [20]u8 {
         // "2021-10-21T23:20:30Z"
         var result: [20]u8 = @splat(0);
         var fbs = std.io.fixedBufferStream(&result);
@@ -60,7 +58,7 @@ pub const DateTime = struct {
         return result;
     }
 
-    pub fn eql(self: Self, other: Self) bool {
+    pub fn eql(self: DateTime, other: DateTime) bool {
         return self.ms == other.ms and
             self.seconds == other.seconds and
             self.minutes == other.minutes and
@@ -72,35 +70,35 @@ pub const DateTime = struct {
             self.weekday == other.weekday;
     }
 
-    pub fn addMs(self: Self, count: u64) Self {
+    pub fn addMs(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         var result = self;
         result.ms += @intCast(count % 1000);
         return result.addSecs(count / 1000);
     }
 
-    pub fn addSecs(self: Self, count: u64) Self {
+    pub fn addSecs(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         var result = self;
         result.seconds += @intCast(count % 60);
         return result.addMins(count / 60);
     }
 
-    pub fn addMins(self: Self, count: u64) Self {
+    pub fn addMins(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         var result = self;
         result.minutes += @intCast(count % 60);
         return result.addHours(count / 60);
     }
 
-    pub fn addHours(self: Self, count: u64) Self {
+    pub fn addHours(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         var result = self;
         result.hours += @intCast(count % 24);
         return result.addDays(count / 24);
     }
 
-    pub fn addDays(self: Self, count: u64) Self {
+    pub fn addDays(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         var result = self;
         var input = count;
@@ -157,12 +155,12 @@ pub const DateTime = struct {
         return result;
     }
 
-    pub fn addWeeks(self: Self, count: u64) Self {
+    pub fn addWeeks(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         return self.addDays(7).addWeeks(count - 1);
     }
 
-    pub fn addMonths(self: Self, count: u64) Self {
+    pub fn addMonths(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         var result = self;
         var input = count;
@@ -175,7 +173,7 @@ pub const DateTime = struct {
         return result;
     }
 
-    pub fn addYears(self: Self, count: u64) Self {
+    pub fn addYears(self: DateTime, count: u64) DateTime {
         var result = self;
         for (0..count) |_| {
             result = result.addDays(result.daysThisYear());
@@ -183,28 +181,28 @@ pub const DateTime = struct {
         return result;
     }
 
-    pub fn addQuarters(self: Self, count: u64) Self {
+    pub fn addQuarters(self: DateTime, count: u64) DateTime {
         if (count == 0) return self;
         return self.addMonths(3).addQuarters(count - 1);
     }
 
-    pub fn isLeapYear(self: Self) bool {
+    pub fn isLeapYear(self: DateTime) bool {
         return time.isLeapYear(self.years);
     }
 
-    pub fn daysThisYear(self: Self) u16 {
+    pub fn daysThisYear(self: DateTime) u16 {
         return time.daysInYear(self.years);
     }
 
-    pub fn daysThisMonth(self: Self) u16 {
+    pub fn daysThisMonth(self: DateTime) u16 {
         return self.daysInMonth(self.months);
     }
 
-    fn daysInMonth(self: Self, month: u16) u16 {
+    fn daysInMonth(self: DateTime, month: u16) u16 {
         return time.daysInMonth(self.years, month);
     }
 
-    pub fn dayOfThisYear(self: Self) u16 {
+    pub fn dayOfThisYear(self: DateTime) u16 {
         var ret: u16 = 0;
         for (0..self.months) |item| {
             ret += self.daysInMonth(@intCast(item));
@@ -213,12 +211,12 @@ pub const DateTime = struct {
         return ret;
     }
 
-    pub fn toUnix(self: Self) u64 {
+    pub fn toUnix(self: DateTime) u64 {
         const x = self.toUnixMilli();
         return x / 1000;
     }
 
-    pub fn toUnixMilli(self: Self) u64 {
+    pub fn toUnixMilli(self: DateTime) u64 {
         var res: u64 = 0;
         res += self.ms;
         res += @as(u64, self.seconds) * ms_per_s;
@@ -228,7 +226,7 @@ pub const DateTime = struct {
         return res;
     }
 
-    fn daysSinceEpoch(self: Self) u64 {
+    fn daysSinceEpoch(self: DateTime) u64 {
         var res: u64 = 0;
         res += self.days;
         for (0..self.years - epoch_unix.years) |i| res += time.daysInYear(@intCast(i));
@@ -237,7 +235,7 @@ pub const DateTime = struct {
     }
 
     /// fmt is based on https://momentjs.com/docs/#/displaying/format/
-    pub fn format(self: Self, comptime fmt: string, options: std.fmt.FormatOptions, writer: anytype) !void {
+    pub fn format(self: DateTime, comptime fmt: string, options: std.fmt.FormatOptions, writer: anytype) !void {
         _ = options;
 
         if (fmt.len == 0) @compileError("DateTime: format string can't be empty");
@@ -344,7 +342,7 @@ pub const DateTime = struct {
         }
     }
 
-    pub fn formatAlloc(self: Self, alloc: std.mem.Allocator, comptime fmt: string) !string {
+    pub fn formatAlloc(self: DateTime, alloc: std.mem.Allocator, comptime fmt: string) !string {
         var list = std.ArrayList(u8).init(alloc);
         defer list.deinit();
 
@@ -404,18 +402,18 @@ pub const DateTime = struct {
         X, // unix
     };
 
-    pub fn since(self: Self, other_in_the_past: Self) Duration {
+    pub fn since(self: DateTime, other_in_the_past: DateTime) Duration {
         return Duration{
             .ms = self.toUnixMilli() - other_in_the_past.toUnixMilli(),
         };
     }
 
-    pub fn era(self: Self) Era {
+    pub fn era(self: DateTime) Era {
         if (self.years >= 0) return .AD;
         @compileError("TODO");
     }
 
-    pub fn weekday(self: Self) WeekDay {
+    pub fn weekday(self: DateTime) WeekDay {
         var i = self.daysSinceEpoch() % 7;
         var result = WeekDay.Thu; // weekday of epoch_unix
         while (i > 0) : (i -= 1) {
