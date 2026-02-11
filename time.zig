@@ -1,7 +1,14 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const string = []const u8;
 const extras = @import("extras");
+const sys_linux = @import("sys-linux");
 const time = @This();
+
+const sys = switch (builtin.target.os.tag) {
+    .linux => sys_linux,
+    else => unreachable, // TODO:
+};
 
 pub const DateTime = struct {
     ms: u16,
@@ -34,7 +41,7 @@ pub const DateTime = struct {
     }
 
     pub fn now() DateTime {
-        return initUnixMs(@intCast(std.time.milliTimestamp()));
+        return initUnixMs(@intCast(milliTimestamp()));
     }
 
     pub const epoch_unix = DateTime{
@@ -544,3 +551,16 @@ pub const s_per_min = 60;
 pub const s_per_hour = s_per_min * 60;
 pub const s_per_day = s_per_hour * 24;
 pub const s_per_week = s_per_day * 7;
+
+pub fn nanoTimestamp() i128 {
+    const ts = sys.clock_gettime(sys.CLOCK.REALTIME) catch return 0;
+    var result: i128 = 0;
+    result += ts.sec;
+    result *= ns_per_s;
+    result += ts.nsec;
+    return result;
+}
+
+pub fn milliTimestamp() i64 {
+    return @as(i64, @intCast(@divFloor(nanoTimestamp(), ns_per_ms)));
+}
