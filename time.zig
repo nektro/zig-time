@@ -561,6 +561,10 @@ pub fn nanoTimestamp() i128 {
     return result;
 }
 
+pub fn microTimestamp() i64 {
+    return @as(i64, @intCast(@divFloor(nanoTimestamp(), ns_per_us)));
+}
+
 pub fn milliTimestamp() i64 {
     return @as(i64, @intCast(@divFloor(nanoTimestamp(), ns_per_ms)));
 }
