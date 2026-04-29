@@ -233,6 +233,13 @@ pub const DateTime = struct {
         return res;
     }
 
+    pub fn to_timespec(self: DateTime) sys.struct_timespec {
+        return .{
+            .sec = self.toUnix(),
+            .nsec = self.ms * ns_per_ms,
+        };
+    }
+
     fn daysSinceEpoch(self: DateTime) u64 {
         var res: u64 = 0;
         res += self.days;
