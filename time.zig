@@ -235,8 +235,8 @@ pub const DateTime = struct {
 
     pub fn to_timespec(self: DateTime) sys.struct_timespec {
         return .{
-            .sec = self.toUnix(),
-            .nsec = self.ms * ns_per_ms,
+            .sec = @intCast(self.toUnix()),
+            .nsec = @as(isize, self.ms) * ns_per_ms,
         };
     }
 
