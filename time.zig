@@ -7,6 +7,7 @@ const time = @This();
 
 const sys = switch (builtin.target.os.tag) {
     .linux => sys_linux,
+    .macos => @import("sys-darwin"),
     else => unreachable, // TODO:
 };
 

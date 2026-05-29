@@ -3,6 +3,7 @@ MIT:
 - This
 - git https://github.com/nektro/zig-expect
 - git https://github.com/nektro/zig-extras
+- git https://github.com/nektro/zig-sys-darwin
 - git https://github.com/nektro/zig-sys-linux
 
 Unspecified:
