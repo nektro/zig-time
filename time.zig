@@ -358,7 +358,7 @@ pub const DateTime = struct {
     }
 
     pub fn formatAlloc(self: DateTime, alloc: std.mem.Allocator, comptime fmt: string) !string {
-        var list = std.ArrayList(u8).init(alloc);
+        var list = std.array_list.Managed(u8).init(alloc);
         defer list.deinit();
 
         try self.format(fmt, .{}, list.writer());
