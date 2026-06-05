@@ -250,9 +250,7 @@ pub const DateTime = struct {
     }
 
     /// fmt is based on https://momentjs.com/docs/#/displaying/format/
-    pub fn format(self: DateTime, comptime fmt: string, options: std.fmt.FormatOptions, writer: anytype) !void {
-        _ = options;
-
+    pub fn formatFmt(self: DateTime, comptime fmt: string, writer: anytype) !void {
         if (fmt.len == 0) @compileError("DateTime: format string can't be empty");
 
         @setEvalBranchQuota(100000);
@@ -358,10 +356,10 @@ pub const DateTime = struct {
     }
 
     pub fn formatAlloc(self: DateTime, alloc: std.mem.Allocator, comptime fmt: string) !string {
-        var list = std.array_list.Managed(u8).init(alloc);
+        var list = std.Io.Writer.Allocating.init(alloc);
         defer list.deinit();
 
-        try self.format(fmt, .{}, list.writer());
+        try self.formatFmt(fmt, &list.writer);
         return list.toOwnedSlice();
     }
 
