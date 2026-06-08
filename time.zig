@@ -580,3 +580,46 @@ pub fn microTimestamp() i64 {
 pub fn milliTimestamp() i64 {
     return @as(i64, @intCast(@divFloor(nanoTimestamp(), ns_per_ms)));
 }
+
+pub const Instant = struct {
+    timestamp_ns: u64,
+
+    pub fn now() !Instant {
+        const ts = try sys.clock_gettime(sys.CLOCK.REALTIME);
+        return .{ .timestamp_ns = @as(u64, @intCast(ts.nsec)) + @as(u64, @intCast(ts.sec)) * ns_per_s };
+    }
+
+    pub fn since(self: Instant, earlier: Instant) u64 {
+        return self.timestamp_ns - earlier.timestamp_ns;
+    }
+
+    pub fn order(self: Instant, other: Instant) std.math.Order {
+        return std.math.order(self.timestamp_ns, other.timestamp_ns);
+    }
+};
+
+pub const Timer = struct {
+    started: Instant,
+
+    pub fn start() !Timer {
+        return .{ .started = try .now() };
+    }
+
+    fn sample() Instant {
+        return Instant.now() catch unreachable;
+    }
+
+    pub fn read(self: *const Timer) u64 {
+        return sample().since(self.started);
+    }
+
+    pub fn reset(self: *Timer) void {
+        self.started = sample();
+    }
+
+    pub fn lap(self: *Timer) u64 {
+        const current = sample();
+        defer self.started = current;
+        return current.since(self.started);
+    }
+};
