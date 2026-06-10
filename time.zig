@@ -581,6 +581,10 @@ pub fn milliTimestamp() i64 {
     return @as(i64, @intCast(@divFloor(nanoTimestamp(), ns_per_ms)));
 }
 
+pub fn timestamp() i64 {
+    return @as(i64, @intCast(@divFloor(nanoTimestamp(), ns_per_s)));
+}
+
 pub const Instant = struct {
     timestamp_ns: u64,
 
