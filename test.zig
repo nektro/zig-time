@@ -120,7 +120,6 @@ comptime {
         .{ "SS", "78" },
         .{ "SSS", "789" },
 
-        .{ "z", "UTC" },
         .{ "Z", "+00:00" },
         .{ "ZZ", "+0000" },
 
@@ -155,7 +154,24 @@ comptime {
 // https://github.com/nektro/zig-time/issues/9
 test {
     var t = time.DateTime.initUnix(1330502962);
-    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A z", "2012-02-29 08:09:22 AM UTC");
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A", "2012-02-29 08:09:22 AM");
     t = t.addYears(1);
-    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A z", "2013-03-01 08:09:22 AM UTC");
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A", "2013-03-01 08:09:22 AM");
+}
+
+test {
+    var t = time.DateTime.initUnix(1330502962);
+    try expectFmt(t, "Z", "+00:00");
+    t.z_offset += 31;
+    try expectFmt(t, "Z", "+07:45");
+    t.z_offset -= 65;
+    try expectFmt(t, "Z", "-08:30");
+}
+test {
+    var t1 = time.DateTime.init(2026, 7, 10, 11, 14, 45, 0);
+    t1.z_offset -= 28;
+    try expectFmt(t1, "Z", "-07:00");
+    var t2 = time.DateTime.init(2026, 7, 10, 18, 14, 45, 0);
+    try expectFmt(t2, "Z", "+00:00");
+    try expect(t1.toUnix()).toEqual(t2.toUnix());
 }

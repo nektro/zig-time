@@ -19,7 +19,7 @@ pub const DateTime = struct {
     days: u8,
     months: u8,
     years: u16,
-    timezone: TimeZone,
+    z_offset: i8,
 
     pub fn initUnixMs(unix: u64) DateTime {
         return epoch_unix.addMs(unix);
@@ -53,7 +53,7 @@ pub const DateTime = struct {
         .days = 0,
         .months = 0,
         .years = 1970,
-        .timezone = .UTC,
+        .z_offset = 0,
     };
 
     pub fn toISOString(self: DateTime) [20]u8 {
@@ -220,8 +220,7 @@ pub const DateTime = struct {
     }
 
     pub fn toUnix(self: DateTime) u64 {
-        const x = self.toUnixMilli();
-        return x / 1000;
+        return self.toUnixMilli() / 1000;
     }
 
     pub fn toUnixMilli(self: DateTime) u64 {
@@ -231,6 +230,7 @@ pub const DateTime = struct {
         res += @as(u64, self.minutes) * ms_per_min;
         res += @as(u64, self.hours) * ms_per_hour;
         res += self.daysSinceEpoch() * ms_per_day;
+        res = extras.safeAdd(res, @as(i32, -self.z_offset) * 15 * ms_per_min);
         return res;
     }
 
@@ -247,6 +247,19 @@ pub const DateTime = struct {
         for (0..self.years - epoch_unix.years) |i| res += time.daysInYear(@intCast(i));
         for (0..self.months) |i| res += self.daysInMonth(@intCast(i));
         return res;
+    }
+
+    /// the timezone offset is stored as a signed amount of 15-min increments.
+    /// the structure of the return value is .{ sign, hrs, mins }.
+    /// 'sign' will be either '+' or '-'
+    pub fn tz_parts(self: DateTime) [3]u8 {
+        const o = self.z_offset;
+        const a = @abs(o);
+        return .{
+            if (o < 0) '-' else '+',
+            a / 4,
+            (a % 4) * 15,
+        };
     }
 
     /// fmt is based on https://momentjs.com/docs/#/displaying/format/
@@ -325,9 +338,8 @@ pub const DateTime = struct {
                     .SS => try writer.print("{:0>2}", .{self.ms / 10}),
                     .SSS => try writer.print("{:0>3}", .{self.ms}),
 
-                    .z => try writer.writeAll(@tagName(self.timezone)),
-                    .Z => try writer.writeAll("+00:00"),
-                    .ZZ => try writer.writeAll("+0000"),
+                    .Z => try writer.print("{c}{:0>2}:{:0>2}", toTuple(self.tz_parts())),
+                    .ZZ => try writer.print("{c}{:0>2}{:0>2}", toTuple(self.tz_parts())),
 
                     .x => try writer.print("{}", .{self.toUnixMilli()}),
                     .X => try writer.print("{}", .{self.toUnix()}),
@@ -358,7 +370,6 @@ pub const DateTime = struct {
     pub fn formatAlloc(self: DateTime, alloc: std.mem.Allocator, comptime fmt: string) !string {
         var list = std.Io.Writer.Allocating.init(alloc);
         defer list.deinit();
-
         try self.formatFmt(fmt, &list.writer);
         return list.toOwnedSlice();
     }
@@ -408,7 +419,6 @@ pub const DateTime = struct {
         S, // 0 1 ... 8 9 (second fraction)
         SS, // 00 01 ... 98 99
         SSS, // 000 001 ... 998 999
-        z, // EST CST ... MST PST
         Z, // -07:00 -06:00 ... +06:00 +07:00
         ZZ, // -0700 -0600 ... +0600 +0700
         x, // unix milli
@@ -528,6 +538,12 @@ fn printLongName(writer: anytype, index: u16, names: []const string) !void {
 fn wrap(val: u16, at: u16) u16 {
     const tmp = val % at;
     return if (tmp == 0) at else tmp;
+}
+
+fn toTuple(array: anytype) @Tuple(&@as([array.len]type, @splat(std.meta.Child(@TypeOf(array))))) {
+    var result: @Tuple(&@as([array.len]type, @splat(std.meta.Child(@TypeOf(array))))) = undefined;
+    inline for (array, 0..) |v, i| result[i] = v;
+    return result;
 }
 
 pub const Duration = struct {
