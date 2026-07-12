@@ -41,7 +41,6 @@ pub const DateTime = struct {
             .addMs(ms);
     }
 
-    // TODO parse /etc/localtime and get the local offset (https://datatracker.ietf.org/doc/html/rfc8536)
     pub fn now() DateTime {
         return initUnixMs(@intCast(milliTimestamp()));
     }
