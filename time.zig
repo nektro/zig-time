@@ -426,9 +426,9 @@ pub const DateTime = struct {
         X, // unix
     };
 
-    pub fn since(self: DateTime, other_in_the_past: DateTime) Duration {
+    pub fn since(self: DateTime, other: DateTime) Duration {
         return Duration{
-            .ms = self.toUnixMilli() - other_in_the_past.toUnixMilli(),
+            .ms = @as(i64, @intCast(self.toUnixMilli())) - @as(i64, @intCast(other.toUnixMilli())),
         };
     }
 
@@ -548,7 +548,7 @@ fn toTuple(array: anytype) @Tuple(&@as([array.len]type, @splat(std.meta.Child(@T
 }
 
 pub const Duration = struct {
-    ms: u64,
+    ms: i64,
 };
 
 // Divisions of a nanosecond.
