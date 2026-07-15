@@ -446,6 +446,10 @@ pub const DateTime = struct {
         }
         return result;
     }
+
+    pub fn stringifyJson(self: DateTime, writer: anytype, options: std.json.Stringify.Options, json: type) !void {
+        return json.stringify(writer, &self.toISOString(), options);
+    }
 };
 
 pub const format = struct {
