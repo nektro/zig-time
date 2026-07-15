@@ -7,5 +7,6 @@ dependencies:
   - src: git https://github.com/nektro/zig-extras
   - src: git https://github.com/nektro/zig-sys-linux
   - src: git https://github.com/nektro/zig-sys-darwin
+  - src: git https://github.com/nektro/zig-nio
 root_dependencies:
   - src: git https://github.com/nektro/zig-expect

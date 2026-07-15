@@ -2,6 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 const string = []const u8;
 const extras = @import("extras");
+const nio = @import("nio");
 const sys_linux = @import("sys-linux");
 const time = @This();
 
@@ -56,13 +57,14 @@ pub const DateTime = struct {
         .z_offset = 0,
     };
 
-    pub fn toISOString(self: DateTime) [20]u8 {
-        // "2021-10-21T23:20:30Z"
-        var result: [20]u8 = @splat(0);
-        var fbs = std.io.fixedBufferStream(&result);
-        self.format("YYYY-MM-DD HH:mm:ss", .{}, fbs.writer()) catch unreachable;
+    pub fn toISOString(self: DateTime) [25]u8 {
+        // "2021-10-21T23:20:30+00:00"
+        var result: [25]u8 = @splat(0);
+        var fbs: nio.FixedBufferStream([]u8) = .init(&result);
+        self.formatFmt("YYYY-MM-DD HH:mm:ss", &fbs) catch unreachable;
+        fbs = .init(result[19..]);
+        self.formatFmt("Z", &fbs) catch unreachable;
         result[10] = 'T';
-        result[19] = 'Z';
         return result;
     }
 
