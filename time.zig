@@ -46,6 +46,12 @@ pub const DateTime = struct {
         return initUnixMs(@intCast(milliTimestamp()));
     }
 
+    pub fn nowAtOffset(offset: i8) DateTime {
+        var result: DateTime = .initUnixMs(@intCast(milliTimestamp() + (@as(i64, offset) * 15 * ms_per_min)));
+        result.z_offset = offset;
+        return result;
+    }
+
     pub const epoch_unix = DateTime{
         .ms = 0,
         .seconds = 0,
