@@ -82,8 +82,7 @@ pub const DateTime = struct {
             self.days == other.days and
             self.months == other.months and
             self.years == other.years and
-            self.timezone == other.timezone and
-            self.weekday == other.weekday;
+            self.z_offset == other.z_offset;
     }
 
     pub fn addMs(self: DateTime, count: u64) DateTime {
