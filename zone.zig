@@ -314,4 +314,7 @@ pub const Zone = enum {
     @"Pacific/Tahiti",
     @"Pacific/Tarawa",
     @"Pacific/Tongatapu",
+
+    pub const BaseType = []const u8;
+    pub const default: @This() = .@"Etc/UTC";
 };

@@ -59,6 +59,9 @@ pub fn main() !void {
     for (zones.items) |z| {
         try out_w.print("    {},\n", .{FormatId{ .bytes = z }});
     }
+    try out_w.writeAll("\n");
+    try out_w.writeAll("    pub const BaseType = []const u8;\n");
+    try out_w.writeAll("    pub const default: @This() = .@\"Etc/UTC\";\n");
     try out_w.writeAll("};\n");
     try out_w.flush();
 }
