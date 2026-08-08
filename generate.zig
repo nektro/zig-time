@@ -44,7 +44,7 @@ pub fn main() !void {
             var jter = std.mem.tokenizeAny(u8, line, " \t");
             _ = jter.next().?;
             const name = jter.next().?;
-            if (std.mem.indexOfScalar(u8, name, '/') == null) continue;
+            if (std.mem.countScalar(u8, name, '/') != 1) continue;
             try zones.append(allocator, try allocator.dupe(u8, name));
         }
     }
