@@ -471,14 +471,6 @@ pub const format = struct {
     pub const llll = "ddd, " ++ lll;
 };
 
-pub const TimeZone = enum {
-    UTC,
-
-    pub fn jsonStringify(self: @This(), json_stream: anytype) !void {
-        try json_stream.write(@tagName(self));
-    }
-};
-
 pub const WeekDay = enum {
     Sun,
     Mon,
