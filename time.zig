@@ -3,11 +3,10 @@ const builtin = @import("builtin");
 const string = []const u8;
 const extras = @import("extras");
 const nio = @import("nio");
-const sys_linux = @import("sys-linux");
 const time = @This();
 
 const sys = switch (builtin.target.os.tag) {
-    .linux => sys_linux,
+    .linux => @import("sys-linux"),
     .macos => @import("sys-darwin"),
     else => unreachable, // TODO:
 };
