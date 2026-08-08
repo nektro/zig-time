@@ -62,6 +62,10 @@ pub fn main() !void {
     try out_w.writeAll("\n");
     try out_w.writeAll("    pub const BaseType = []const u8;\n");
     try out_w.writeAll("    pub const default: @This() = .@\"Etc/UTC\";\n");
+    try out_w.writeAll("\n");
+    try out_w.writeAll("    pub fn nprint(self: Zone, writer: anytype) !void {\n");
+    try out_w.writeAll("        return writer.writeAll(@tagName(self));\n");
+    try out_w.writeAll("    }\n");
     try out_w.writeAll("};\n");
     try out_w.flush();
 }

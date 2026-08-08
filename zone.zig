@@ -317,4 +317,8 @@ pub const Zone = enum {
 
     pub const BaseType = []const u8;
     pub const default: @This() = .@"Etc/UTC";
+
+    pub fn nprint(self: Zone, writer: anytype) !void {
+        return writer.writeAll(@tagName(self));
+    }
 };
