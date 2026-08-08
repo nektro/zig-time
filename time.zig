@@ -11,6 +11,8 @@ const sys = switch (builtin.target.os.tag) {
     else => unreachable, // TODO:
 };
 
+pub const Zone = @import("./zone.zig").Zone;
+
 pub const DateTime = struct {
     ms: u16,
     seconds: u8,

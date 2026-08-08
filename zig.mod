@@ -10,3 +10,11 @@ dependencies:
   - src: git https://github.com/nektro/zig-nio
 root_dependencies:
   - src: git https://github.com/nektro/zig-expect
+  - src: git https://github.com/nektro/zig-nfs
+  - src: git https://github.com/nektro/zig-nio
+  - src: git https://github.com/nektro/zig-extras
+
+  - src: git https://github.com/eggert/tz
+    id: xw6xua7fqgft9ezk64mdj4nirj4hlz6s84vy2n5gu9ihrwuu
+    license: CC0-1.0
+    keep: true

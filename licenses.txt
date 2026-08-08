@@ -6,6 +6,11 @@ MIT:
 - git https://github.com/nektro/zig-sys-darwin
 - git https://github.com/nektro/zig-sys-linux
 
+CC0-1.0:
+= https://spdx.org/licenses/CC0-1.0
+- git https://github.com/eggert/tz
+
 MPL-2.0:
 = https://spdx.org/licenses/MPL-2.0
+- git https://github.com/nektro/zig-nfs
 - git https://github.com/nektro/zig-nio
