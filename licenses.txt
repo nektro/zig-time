@@ -4,7 +4,10 @@ MIT:
 - git https://github.com/nektro/zig-expect
 - git https://github.com/nektro/zig-extras
 - git https://github.com/nektro/zig-sys-darwin
+- git https://github.com/nektro/zig-sys-freebsd
 - git https://github.com/nektro/zig-sys-linux
+- git https://github.com/nektro/zig-sys-netbsd
+- git https://github.com/nektro/zig-sys-openbsd
 
 CC0-1.0:
 = https://spdx.org/licenses/CC0-1.0
