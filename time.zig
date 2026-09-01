@@ -509,12 +509,12 @@ pub const Era = enum {
     }
 };
 
+// https://hueffner.de/falk/blog/a-leap-year-check-in-three-instructions.html
 pub fn isLeapYear(year: u16) bool {
-    var ret = false;
-    if (year % 4 == 0) ret = true;
-    if (year % 100 == 0) ret = false;
-    if (year % 400 == 0) ret = true;
-    return ret;
+    if (year % 4 != 0) return false;
+    if (year % 25 != 0) return true;
+    if (year % 16 == 0) return true;
+    return false;
 }
 
 pub fn daysInYear(year: u16) u16 {
