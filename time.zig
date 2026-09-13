@@ -461,6 +461,39 @@ pub const DateTime = struct {
     }
 };
 
+pub const PlainYearMonth = struct {
+    years: u16,
+    months: u8,
+};
+
+pub const PlainMonthDay = struct {
+    months: u8,
+    days: u8,
+};
+
+pub const PlainDate = struct {
+    years: u16,
+    months: u8,
+    days: u8,
+};
+
+pub const PlainTime = struct {
+    hours: u8,
+    minutes: u8,
+    seconds: u8,
+    ms: u16,
+};
+
+pub const PlainDateTime = struct {
+    years: u16,
+    months: u8,
+    days: u8,
+    hours: u8,
+    minutes: u8,
+    seconds: u8,
+    ms: u16,
+};
+
 pub const format = struct {
     pub const LT = "h:mm A";
     pub const LTS = "h:mm:ss A";
