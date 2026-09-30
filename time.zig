@@ -459,6 +459,10 @@ pub const DateTime = struct {
     pub fn stringifyJson(self: DateTime, writer: anytype, options: std.json.Stringify.Options, json: type) !void {
         return json.stringify(writer, &self.toISOString(), options);
     }
+
+    pub fn normal(self: DateTime) DateTime {
+        return .initUnixMs(self.toUnixMilli());
+    }
 };
 
 pub const PlainYearMonth = struct {
