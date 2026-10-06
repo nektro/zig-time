@@ -175,3 +175,17 @@ test {
     try expectFmt(t2, "Z", "+00:00");
     try expect(t1.toUnix()).toEqual(t2.toUnix());
 }
+
+// https://github.com/nektro/zig-time/issues/12
+test {
+    var t = time.DateTime.init(2026, 9, 4, 0, 0, 0, 0);
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A", "2026-10-05 12:00:00 AM");
+    t = t.addDays(89);
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A", "2027-01-02 12:00:00 AM");
+}
+test {
+    var t = time.DateTime.init(2026, 11, 30, 0, 0, 0, 0);
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A", "2026-12-31 12:00:00 AM");
+    t = t.addDays(2);
+    try expectFmt(t, "YYYY-MM-DD hh:mm:ss A", "2027-01-02 12:00:00 AM");
+}

@@ -153,6 +153,10 @@ pub const DateTime = struct {
                 result.months += 1;
                 result.days = 0;
             }
+            if (result.months == 12) {
+                result.years += 1;
+                result.months = 0;
+            }
             result.days += @intCast(input);
 
             if (result.days == result.daysThisMonth()) {
