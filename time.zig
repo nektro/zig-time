@@ -67,13 +67,19 @@ pub const DateTime = struct {
         .z_offset = 0,
     };
 
-    pub fn toISOString(self: DateTime) [25]u8 {
-        // "2021-10-21T23:20:30+00:00"
-        var result: [25]u8 = @splat(0);
+    pub fn toRFCString(self: DateTime) [25]u8 {
+        // "2021-10-21 23:20:30+00:00"
+        var result: [25]u8 = @splat(' ');
         var fbs: nio.FixedBufferStream([]u8) = .init(&result);
         self.formatFmt("YYYY-MM-DD HH:mm:ss", &fbs) catch unreachable;
         fbs = .init(result[19..]);
         self.formatFmt("Z", &fbs) catch unreachable;
+        return result;
+    }
+
+    pub fn toISOString(self: DateTime) [25]u8 {
+        // "2021-10-21T23:20:30+00:00"
+        var result = self.toRFCString();
         result[10] = 'T';
         return result;
     }
