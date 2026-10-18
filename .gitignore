@@ -1,5 +1,6 @@
 .zig-cache
 zig-out
+zig-pkg
 .zigmod
 deps.zig
 files.zig
