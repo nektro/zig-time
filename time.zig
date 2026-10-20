@@ -319,13 +319,13 @@ pub const DateTime = struct {
                     .DDDo => try printOrdinal(writer, self.dayOfThisYear() + 1),
                     .DDDD => try writer.print("{:0>3}", .{self.dayOfThisYear() + 1}),
 
-                    .d => try writer.print("{}", .{@intFromEnum(self.weekday())}),
-                    .do => try printOrdinal(writer, @intFromEnum(self.weekday())),
+                    .d => try writer.print("{}", .{@backingInt(self.weekday())}),
+                    .do => try printOrdinal(writer, @backingInt(self.weekday())),
                     .dd => try writer.writeAll(@tagName(self.weekday())[0..2]),
                     .ddd => try writer.writeAll(@tagName(self.weekday())),
-                    .dddd => try printLongName(writer, @intFromEnum(self.weekday()), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
-                    .e => try writer.print("{}", .{@intFromEnum(self.weekday())}),
-                    .E => try writer.print("{}", .{@intFromEnum(self.weekday()) + 1}),
+                    .dddd => try printLongName(writer, @backingInt(self.weekday()), &[_]string{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }),
+                    .e => try writer.print("{}", .{@backingInt(self.weekday())}),
+                    .E => try writer.print("{}", .{@backingInt(self.weekday()) + 1}),
 
                     .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
                     .wo => try printOrdinal(writer, self.dayOfThisYear() / 7 + 1),
