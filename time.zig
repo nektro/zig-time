@@ -3,16 +3,8 @@ const builtin = @import("builtin");
 const string = []const u8;
 const extras = @import("extras");
 const nio = @import("nio");
+const sys = @import("sys").impl;
 const time = @This();
-
-const sys = switch (builtin.target.os.tag) {
-    .linux => @import("sys-linux"),
-    .macos => @import("sys-darwin"),
-    .freebsd => @import("sys-freebsd"),
-    .netbsd => @import("sys-netbsd"),
-    .openbsd => @import("sys-openbsd"),
-    else => unreachable, // TODO:
-};
 
 pub const Zone = @import("./zone.zig").Zone;
 
