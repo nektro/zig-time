@@ -26,6 +26,18 @@ pub const DateTime = struct {
         return epoch_unix.addSecs(unix);
     }
 
+    pub fn initOffsetUnix(unix: i64, offset: i8) DateTime {
+        var result: DateTime = .initUnix(@intCast(unix + (@as(i64, offset) * 15 * s_per_min)));
+        result.z_offset = offset;
+        return result;
+    }
+
+    pub fn initOffsetUnixMs(unix: i64, offset: i8) DateTime {
+        var result: DateTime = .initUnixMs(@intCast(unix + (@as(i64, offset) * 15 * ms_per_min)));
+        result.z_offset = offset;
+        return result;
+    }
+
     /// Caller asserts that this is > epoch
     pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16, ms: u16) DateTime {
         return epoch_unix
@@ -43,9 +55,7 @@ pub const DateTime = struct {
     }
 
     pub fn nowAtOffset(offset: i8) DateTime {
-        var result: DateTime = .initUnixMs(@intCast(milliTimestamp() + (@as(i64, offset) * 15 * ms_per_min)));
-        result.z_offset = offset;
-        return result;
+        return initOffsetUnixMs(milliTimestamp(), offset);
     }
 
     pub const epoch_unix = DateTime{
