@@ -189,3 +189,22 @@ test {
     t = t.addDays(2);
     try expectFmt(t, "YYYY-MM-DD hh:mm:ss A", "2027-01-02 12:00:00 AM");
 }
+
+test {
+    var t = time.DateTime.initUnix(0);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Thu 1970-01-01 12:00:00 AM");
+    t = t.addYears(1);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Fri 1971-01-01 12:00:00 AM");
+    t = t.addYears(1);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Sat 1972-01-01 12:00:00 AM");
+    t = t.addYears(1);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Mon 1973-01-01 12:00:00 AM");
+    t = t.addYears(1);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Tue 1974-01-01 12:00:00 AM");
+    t = t.addYears(1);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Wed 1975-01-01 12:00:00 AM");
+    t = t.addYears(1);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Thu 1976-01-01 12:00:00 AM");
+    t = t.addYears(1);
+    try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Sat 1977-01-01 12:00:00 AM");
+}
