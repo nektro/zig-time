@@ -285,7 +285,7 @@ pub const DateTime = struct {
     fn daysSinceEpoch(self: DateTime) u64 {
         var res: u64 = 0;
         res += self.days;
-        for (0..self.years - epoch_unix.years) |i| res += time.daysInYear(@intCast(i));
+        for (epoch_unix.years..self.years) |i| res += time.daysInYear(@intCast(i));
         for (0..self.months) |i| res += self.daysInMonth(@intCast(i));
         return res;
     }

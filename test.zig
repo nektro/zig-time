@@ -223,3 +223,8 @@ test {
     t = t.addDays(1);
     try expect(&t.formatStatic("ddd YYYY-MM-DD hh:mm:ss A DDDD ww WW")).toEqualString("Tue 1970-01-06 12:00:00 AM 006 02 02");
 }
+
+test {
+    const t = time.DateTime.initOffsetUnix(1605682949, -28800 / 60 / 15);
+    try expect(&t.formatStatic("ddd MMM DD HH:mm:ss YYYY ZZ DDDD WW")).toEqualString("Tue Nov 17 23:02:29 2020 -0800 322 47");
+}
