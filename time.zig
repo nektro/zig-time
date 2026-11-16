@@ -386,6 +386,53 @@ pub const DateTime = struct {
         return list.toOwnedSlice();
     }
 
+    pub fn formatStatic(self: DateTime, comptime fmt: string) [fmtLen(fmt):0]u8 {
+        var buf: [fmtLen(fmt):0]u8 = @splat(0);
+        var w: nio.FixedBufferStream([]u8) = .init(&buf);
+        self.formatFmt(fmt, &w) catch unreachable;
+        return buf;
+    }
+
+    pub fn fmtLen(fmt: string) usize {
+        var result: usize = 0;
+        @setEvalBranchQuota(1000000);
+
+        var s = 0;
+        var e = 0;
+        var next: ?FormatSeq = null;
+        inline for (fmt, 0..) |c, i| {
+            e = i + 1;
+
+            if (comptime std.meta.stringToEnum(FormatSeq, fmt[s..e])) |tag| {
+                next = tag;
+                if (i < fmt.len - 1) continue;
+            }
+
+            if (next) |tag| {
+                result += tag.len().?;
+                next = null;
+                s = i;
+            }
+
+            switch (c) {
+                ',',
+                ' ',
+                ':',
+                '-',
+                '.',
+                'T',
+                '/',
+                => {
+                    result += 1;
+                    s = i + 1;
+                    continue;
+                },
+                else => {},
+            }
+        }
+        return result;
+    }
+
     const FormatSeq = enum {
         M, // 1 2 ... 11 12
         Mo, // 1st 2nd ... 11th 12th
@@ -435,6 +482,60 @@ pub const DateTime = struct {
         ZZ, // -0700 -0600 ... +0600 +0700
         x, // unix milli
         X, // unix
+
+        /// the length of the output of a tag or null if the length is variable
+        pub fn len(tag: FormatSeq) ?usize {
+            return switch (tag) {
+                .MM => 2,
+                .M => null,
+                .Mo => null,
+                .MMM => 3,
+                .MMMM => null,
+                .Q => null,
+                .Qo => null,
+                .D => null,
+                .Do => null,
+                .DD => 2,
+                .DDD => null,
+                .DDDo => null,
+                .DDDD => 3,
+                .d => 1,
+                .do => null,
+                .dd => 2,
+                .ddd => 3,
+                .dddd => null,
+                .e => 1,
+                .E => 1,
+                .w => null,
+                .wo => null,
+                .ww => 2,
+                .Y => null,
+                .YY => 2,
+                .YYY => null,
+                .YYYY => 4,
+                .N => 2,
+                .NN => null,
+                .A => 2,
+                .a => 2,
+                .H => null,
+                .HH => 2,
+                .h => null,
+                .hh => 2,
+                .k => null,
+                .kk => 2,
+                .m => null,
+                .mm => 2,
+                .s => null,
+                .ss => 2,
+                .S => null,
+                .SS => 2,
+                .SSS => 3,
+                .Z => 5,
+                .ZZ => 5,
+                .x => null,
+                .X => null,
+            };
+        }
     };
 
     pub fn since(self: DateTime, other: DateTime) Duration {
