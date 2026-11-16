@@ -232,6 +232,24 @@ pub const DateTime = struct {
         return ret;
     }
 
+    pub fn weekOfThisYear(self: DateTime, weekstart: WeekDay) u16 {
+        var remaining = self.dayOfThisYear();
+        var current = DateTime.initUnix(0).addYears(self.years - epoch_unix.years).weekday();
+        var result: u16 = 1;
+        while (remaining > 0) {
+            current = current.next();
+            remaining -= 1;
+            if (current == weekstart) {
+                result += 1;
+                break;
+            }
+        }
+        if (remaining > 0) {
+            result += @intCast(remaining / 7);
+        }
+        return result;
+    }
+
     pub fn toUnix(self: DateTime) u64 {
         return self.toUnixMilli() / 1000;
     }
@@ -319,9 +337,13 @@ pub const DateTime = struct {
                     .e => try writer.print("{}", .{@backingInt(self.weekday())}),
                     .E => try writer.print("{}", .{@backingInt(self.weekday()) + 1}),
 
-                    .w => try writer.print("{}", .{self.dayOfThisYear() / 7 + 1}),
-                    .wo => try printOrdinal(writer, self.dayOfThisYear() / 7 + 1),
-                    .ww => try writer.print("{:0>2}", .{self.dayOfThisYear() / 7 + 1}),
+                    .w => try writer.print("{}", .{self.weekOfThisYear(.Sun)}),
+                    .wo => try printOrdinal(writer, self.weekOfThisYear(.Sun)),
+                    .ww => try writer.print("{:0>2}", .{self.weekOfThisYear(.Sun)}),
+
+                    .W => try writer.print("{}", .{self.weekOfThisYear(.Mon)}),
+                    .Wo => try printOrdinal(writer, self.weekOfThisYear(.Mon)),
+                    .WW => try writer.print("{:0>2}", .{self.weekOfThisYear(.Mon)}),
 
                     .Y => try writer.print("{}", .{self.years + 10000}),
                     .YY => try writer.print("{:0>2}", .{self.years % 100}),
@@ -457,6 +479,9 @@ pub const DateTime = struct {
         w, // 1 2 ... 52 53
         wo, // 1st 2nd ... 52nd 53rd
         ww, // 01 02 ... 52 53
+        W, // 1 2 ... 52 53
+        Wo, // 1st 2nd ... 52nd 53rd
+        WW, // 01 02 ... 52 53
         Y, // 11970 11971 ... 19999 20000 20001 (Holocene calendar)
         YY, // 70 71 ... 29 30
         YYY, // 1 2 ... 1970 1971 ... 2029 2030
@@ -509,6 +534,9 @@ pub const DateTime = struct {
                 .w => null,
                 .wo => null,
                 .ww => 2,
+                .W => null,
+                .Wo => null,
+                .WW => 2,
                 .Y => null,
                 .YY => 2,
                 .YYY => null,

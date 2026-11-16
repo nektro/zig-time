@@ -208,3 +208,18 @@ test {
     t = t.addYears(1);
     try expectFmt(t, "ddd YYYY-MM-DD hh:mm:ss A", "Sat 1977-01-01 12:00:00 AM");
 }
+
+test {
+    var t = time.DateTime.initUnix(0);
+    try expect(&t.formatStatic("ddd YYYY-MM-DD hh:mm:ss A DDDD ww WW")).toEqualString("Thu 1970-01-01 12:00:00 AM 001 01 01");
+    t = t.addDays(1);
+    try expect(&t.formatStatic("ddd YYYY-MM-DD hh:mm:ss A DDDD ww WW")).toEqualString("Fri 1970-01-02 12:00:00 AM 002 01 01");
+    t = t.addDays(1);
+    try expect(&t.formatStatic("ddd YYYY-MM-DD hh:mm:ss A DDDD ww WW")).toEqualString("Sat 1970-01-03 12:00:00 AM 003 01 01");
+    t = t.addDays(1);
+    try expect(&t.formatStatic("ddd YYYY-MM-DD hh:mm:ss A DDDD ww WW")).toEqualString("Sun 1970-01-04 12:00:00 AM 004 02 01");
+    t = t.addDays(1);
+    try expect(&t.formatStatic("ddd YYYY-MM-DD hh:mm:ss A DDDD ww WW")).toEqualString("Mon 1970-01-05 12:00:00 AM 005 02 02");
+    t = t.addDays(1);
+    try expect(&t.formatStatic("ddd YYYY-MM-DD hh:mm:ss A DDDD ww WW")).toEqualString("Tue 1970-01-06 12:00:00 AM 006 02 02");
+}
