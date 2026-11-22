@@ -8,6 +8,7 @@ const time = @This();
 
 pub const Zone = @import("./zone.zig").Zone;
 
+/// all fields are 0-indexed unless otherwise specified
 pub const DateTime = struct {
     ms: u16,
     seconds: u8,
@@ -16,6 +17,7 @@ pub const DateTime = struct {
     days: u8,
     months: u8,
     years: u16,
+    /// increments of 15min
     z_offset: i8,
 
     pub fn initUnixMs(unix: u64) DateTime {
