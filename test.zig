@@ -228,3 +228,8 @@ test {
     const t = time.DateTime.initOffsetUnix(1605682949, -28800 / 60 / 15);
     try expect(&t.formatStatic("ddd MMM DD HH:mm:ss YYYY ZZ DDDD WW")).toEqualString("Tue Nov 17 23:02:29 2020 -0800 322 47");
 }
+
+test {
+    const t = time.DateTime.epoch;
+    try expect(&t.formatStatic("ddd MMM DD HH:mm:ss YYYY ZZ DDDD WW")).toEqualString("Mon Jan 01 00:00:00 0001 +0000 001 01");
+}

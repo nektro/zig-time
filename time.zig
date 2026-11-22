@@ -40,10 +40,9 @@ pub const DateTime = struct {
         return result;
     }
 
-    /// Caller asserts that this is > epoch
     pub fn init(year: u16, month: u16, day: u16, hr: u16, min: u16, sec: u16, ms: u16) DateTime {
-        return epoch_unix
-            .addYears(year - epoch_unix.years)
+        return epoch
+            .addYears(year - 1) // AD starts in year 1
             .addMonths(month)
             .addDays(day)
             .addHours(hr)
@@ -60,15 +59,20 @@ pub const DateTime = struct {
         return initOffsetUnixMs(milliTimestamp(), offset);
     }
 
-    pub const epoch_unix = DateTime{
+    pub const epoch = DateTime{
         .ms = 0,
         .seconds = 0,
         .minutes = 0,
         .hours = 0,
         .days = 0,
         .months = 0,
-        .years = 1970,
+        .years = 0,
         .z_offset = 0,
+    };
+
+    pub const epoch_unix = blk: {
+        @setEvalBranchQuota(std.math.maxInt(u32));
+        break :blk epoch.addYears(1969);
     };
 
     pub fn toRFCString(self: DateTime) [25]u8 {
@@ -220,11 +224,11 @@ pub const DateTime = struct {
     }
 
     pub fn isLeapYear(self: DateTime) bool {
-        return time.isLeapYear(self.years);
+        return time.isLeapYear(self.years + 1);
     }
 
     pub fn daysThisYear(self: DateTime) u16 {
-        return time.daysInYear(self.years);
+        return time.daysInYear(self.years + 1);
     }
 
     pub fn daysThisMonth(self: DateTime) u16 {
@@ -232,7 +236,7 @@ pub const DateTime = struct {
     }
 
     fn daysInMonth(self: DateTime, month: u16) u16 {
-        return time.daysInMonth(self.years, month);
+        return time.daysInMonth(self.years + 1, month);
     }
 
     pub fn dayOfThisYear(self: DateTime) u16 {
@@ -246,7 +250,7 @@ pub const DateTime = struct {
 
     pub fn weekOfThisYear(self: DateTime, weekstart: WeekDay) u16 {
         var remaining = self.dayOfThisYear();
-        var current = DateTime.initUnix(0).addYears(self.years - epoch_unix.years).weekday();
+        var current = DateTime.epoch.addYears(self.years).weekday();
         var result: u16 = 1;
         while (remaining > 0) {
             current = current.next();
@@ -272,7 +276,7 @@ pub const DateTime = struct {
         res += @as(u64, self.seconds) * ms_per_s;
         res += @as(u64, self.minutes) * ms_per_min;
         res += @as(u64, self.hours) * ms_per_hour;
-        res += self.daysSinceEpoch() * ms_per_day;
+        res += self.daysSinceUnixEpoch() * ms_per_day;
         res = extras.safeAdd(res, @as(i32, -self.z_offset) * 15 * ms_per_min);
         return res;
     }
@@ -284,10 +288,10 @@ pub const DateTime = struct {
         };
     }
 
-    fn daysSinceEpoch(self: DateTime) u64 {
+    fn daysSinceUnixEpoch(self: DateTime) u64 {
         var res: u64 = 0;
         res += self.days;
-        for (epoch_unix.years..self.years) |i| res += time.daysInYear(@intCast(i));
+        for (epoch_unix.years + 1..self.years + 1) |i| res += time.daysInYear(@intCast(i));
         for (0..self.months) |i| res += self.daysInMonth(@intCast(i));
         return res;
     }
@@ -357,10 +361,10 @@ pub const DateTime = struct {
                     .Wo => try printOrdinal(writer, self.weekOfThisYear(.Mon)),
                     .WW => try writer.print("{:0>2}", .{self.weekOfThisYear(.Mon)}),
 
-                    .Y => try writer.print("{}", .{self.years + 10000}),
-                    .YY => try writer.print("{:0>2}", .{self.years % 100}),
-                    .YYY => try writer.print("{}", .{self.years}),
-                    .YYYY => try writer.print("{:0>4}", .{self.years}),
+                    .Y => try writer.print("{}", .{(self.years + 1) + 10000}),
+                    .YY => try writer.print("{:0>2}", .{(self.years + 1) % 100}),
+                    .YYY => try writer.print("{}", .{(self.years + 1)}),
+                    .YYYY => try writer.print("{:0>4}", .{(self.years + 1)}),
 
                     .N => try writer.writeAll(@tagName(self.era())),
                     .NN => try writer.writeAll("Anno Domini"),
@@ -590,8 +594,14 @@ pub const DateTime = struct {
     }
 
     pub fn weekday(self: DateTime) WeekDay {
-        var i = self.daysSinceEpoch() % 7;
-        var result = WeekDay.Thu; // weekday of epoch_unix
+        var result = WeekDay.Mon; // weekday of .unix
+        var i = blk: {
+            var res: u64 = 0;
+            res += self.days;
+            for (0..self.years) |i| res += time.daysInYear(@intCast(i + 1));
+            for (0..self.months) |i| res += self.daysInMonth(@intCast(i));
+            break :blk res % 7;
+        };
         while (i > 0) : (i -= 1) {
             result = result.next();
         }
